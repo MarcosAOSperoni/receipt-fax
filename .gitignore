@@ -1,0 +1,29 @@
+# Claude — hidden from public repo
+CLAUDE.md
+claude/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+
+# Environment
+.env
+*.env.local
+
+# macOS
+.DS_Store
+
+# Xcode / iOS
+ios/*.xcodeproj/xcuserdata/
+ios/DerivedData/
+ios/*.ipa
+ios/Pods/
+
+# Docker
+.docker/
