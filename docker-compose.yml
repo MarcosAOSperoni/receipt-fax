@@ -1,0 +1,33 @@
+services:
+  api:
+    build: ./backend
+    ports:
+      - "127.0.0.1:8000:8000"
+    env_file: backend/.env
+    volumes:
+      - media:/app/media
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: postgres:16
+    env_file: backend/.env
+    environment:
+      POSTGRES_USER: receiptfax
+      POSTGRES_PASSWORD: receiptfax
+      POSTGRES_DB: receiptfax
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U receiptfax"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  media:
+  postgres_data:
