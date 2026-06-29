@@ -88,3 +88,52 @@ async def delete_message(
         raise HTTPException(status_code=404, detail="Message not found")
     await db.delete(message)
     await db.commit()
+
+
+@router.get("/device/messages/pending", response_model=list[MessageResponse])
+async def get_pending_messages(
+    db: AsyncSession = Depends(get_db),
+    device: Device = Depends(get_device),
+):
+    device.last_seen_at = datetime.now(timezone.utc)
+
+    result = await db.execute(
+        select(Message)
+        .where(Message.device_id == device.id, Message.status == MessageStatus.pending)
+        .order_by(Message.created_at)
+        .limit(10)
+    )
+    messages = result.scalars().all()
+    await db.commit()
+    return messages
+
+
+@router.post("/device/messages/{message_id}/ack")
+async def ack_message(
+    message_id: uuid.UUID,
+    db: AsyncSession = Depends(get_db),
+    device: Device = Depends(get_device),
+):
+    message = await db.get(Message, message_id)
+    if not message or message.device_id != device.id:
+        raise HTTPException(status_code=404, detail="Message not found")
+    message.status = MessageStatus.printed
+    message.printed_at = datetime.now(timezone.utc)
+    await db.commit()
+    return {"status": "ok"}
+
+
+@router.post("/device/messages/{message_id}/fail")
+async def fail_message(
+    message_id: uuid.UUID,
+    body: FailRequest,
+    db: AsyncSession = Depends(get_db),
+    device: Device = Depends(get_device),
+):
+    message = await db.get(Message, message_id)
+    if not message or message.device_id != device.id:
+        raise HTTPException(status_code=404, detail="Message not found")
+    message.status = MessageStatus.failed
+    message.failure_reason = body.reason
+    await db.commit()
+    return {"status": "ok"}
