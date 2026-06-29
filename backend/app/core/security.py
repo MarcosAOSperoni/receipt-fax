@@ -7,8 +7,7 @@ from passlib.context import CryptContext
 
 from app.core.config import settings
 
-# Use argon2 (more modern and secure) with bcrypt as fallback
-pwd_context = CryptContext(schemes=["argon2", "bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 def hash_password(password: str) -> str:
