@@ -9,7 +9,7 @@ struct ReceiptPreview: View {
         let base: Font
         switch style.size {
         case "large":  base = .system(.title3, design: .monospaced)
-        case "header": return .system(.title2, design: .monospaced).bold()
+        case "header": base = .system(.title2, design: .monospaced)
         default:       base = .system(.body, design: .monospaced)
         }
         return style.bold ? base.bold() : base
