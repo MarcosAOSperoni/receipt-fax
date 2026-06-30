@@ -78,6 +78,9 @@ async def test_list_messages(client):
     r = await client.get("/api/v1/messages", headers={"Authorization": f"Bearer {token}"})
     assert r.status_code == 200
     assert len(r.json()) == 2
+    # Verify newest-first ordering
+    assert r.json()[0]["body"] == "Msg 2"
+    assert r.json()[1]["body"] == "Msg 1"
 
 
 @pytest.mark.asyncio
