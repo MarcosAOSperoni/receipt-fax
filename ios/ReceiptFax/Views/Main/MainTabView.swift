@@ -8,7 +8,7 @@ struct MainTabView: View {
     var body: some View {
         TabView {
             ComposeView()
-                .tabItem { Label("Compose", systemImage: "pencil") }
+                .tabItem { Label("Compose", systemImage: "paperplane.fill") }
 
             HistoryView()
                 .tabItem { Label("History", systemImage: "clock") }
