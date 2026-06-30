@@ -14,3 +14,28 @@ def process_image(image_bytes: bytes, width_px: int) -> Image.Image:
     img = img.convert("L")
     img = img.convert("1")  # PIL uses Floyd-Steinberg dither by default
     return img
+
+
+def print_message(msg: dict, image, printer) -> None:
+    style = msg.get("style") or {}
+    size = style.get("size", "normal")
+
+    printer.set(
+        bold=bool(style.get("bold", False)),
+        align=style.get("align", "left"),
+        double_height=size in ("large", "header"),
+        double_width=size == "header",
+    )
+
+    if image is not None:
+        printer.image(image)
+
+    if msg.get("body"):
+        printer.text(msg["body"] + "\n")
+
+    printer.cut()
+
+
+def open_printer(vendor_id: int, product_id: int):
+    from escpos.printer import Usb
+    return Usb(vendor_id, product_id)
