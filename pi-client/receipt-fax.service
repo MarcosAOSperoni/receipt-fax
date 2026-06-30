@@ -1,0 +1,17 @@
+[Unit]
+Description=Receipt Fax Pi Client
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/receipt-fax/pi-client
+ExecStart=/usr/bin/python3 /home/pi/receipt-fax/pi-client/client.py
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

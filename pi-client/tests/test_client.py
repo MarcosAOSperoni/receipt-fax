@@ -105,3 +105,93 @@ def test_fail_message_posts_reason():
         "https://example.com/api/v1/device/messages/msg-123/fail",
         json={"reason": "USB error"},
     )
+
+
+import configparser
+from unittest.mock import patch
+
+
+def make_config():
+    config = configparser.ConfigParser()
+    config.read_string(
+        "[server]\nurl = https://example.com\ndevice_key = sk_test\n"
+        "[printer]\nusb_vendor_id = 0x04b8\nusb_product_id = 0x0e15\n"
+        "char_width = 42\nprint_width_px = 576\n"
+        "[poll]\ninterval_seconds = 5\n"
+    )
+    return config
+
+
+def test_process_message_text_only_acks():
+    session = make_session()
+    msg = {"id": "m1", "body": "hi", "style": {}, "image_path": None}
+    with patch("client.open_printer", return_value=MagicMock()), \
+         patch("client.print_message") as mock_print, \
+         patch("client.ack_message") as mock_ack:
+        client.process_message(msg, session, "https://example.com", make_config()["printer"])
+    mock_print.assert_called_once()
+    mock_ack.assert_called_once_with(session, "https://example.com", "m1")
+
+
+def test_process_message_with_image_downloads_and_processes():
+    from PIL import Image as PILImage
+    session = make_session()
+    msg = {"id": "m2", "body": None, "style": {}, "image_path": "2026/06/img.png"}
+    fake_img = PILImage.new("1", (576, 400))
+    with patch("client.download_image", return_value=b"\x89PNG") as mock_dl, \
+         patch("client.process_image", return_value=fake_img) as mock_proc, \
+         patch("client.open_printer", return_value=MagicMock()), \
+         patch("client.print_message") as mock_print, \
+         patch("client.ack_message") as mock_ack:
+        client.process_message(msg, session, "https://example.com", make_config()["printer"])
+    mock_dl.assert_called_once_with(session, "https://example.com", "2026/06/img.png")
+    mock_proc.assert_called_once_with(b"\x89PNG", 576)
+    mock_print.assert_called_once()
+    mock_ack.assert_called_once_with(session, "https://example.com", "m2")
+
+
+def test_process_message_calls_fail_on_printer_error():
+    session = make_session()
+    msg = {"id": "m3", "body": "hi", "style": {}, "image_path": None}
+    with patch("client.open_printer", side_effect=Exception("USB error")), \
+         patch("client.fail_message") as mock_fail, \
+         patch("client.ack_message") as mock_ack:
+        client.process_message(msg, session, "https://example.com", make_config()["printer"])
+    mock_fail.assert_called_once_with(session, "https://example.com", "m3", "USB error")
+    mock_ack.assert_not_called()
+
+
+def test_poll_loop_processes_messages_and_sleeps():
+    messages = [{"id": "m1", "body": "hi", "style": {}, "image_path": None}]
+    sleep_calls = []
+
+    def fake_sleep(n):
+        sleep_calls.append(n)
+        if len(sleep_calls) >= 2:
+            raise StopIteration
+
+    with patch("client.fetch_pending", return_value=messages) as mock_fetch, \
+         patch("client.process_message") as mock_proc, \
+         patch("client.time.sleep", side_effect=fake_sleep):
+        with pytest.raises(StopIteration):
+            client.poll_loop(make_config())
+
+    assert mock_fetch.call_count == 2
+    assert mock_proc.call_count == 2
+    assert sleep_calls == [5.0, 5.0]
+
+
+def test_poll_loop_sleeps_even_when_no_messages():
+    sleep_calls = []
+
+    def fake_sleep(n):
+        sleep_calls.append(n)
+        if len(sleep_calls) >= 1:
+            raise StopIteration
+
+    with patch("client.fetch_pending", return_value=[]), \
+         patch("client.time.sleep", side_effect=fake_sleep):
+        with pytest.raises(StopIteration):
+            client.poll_loop(make_config())
+
+    assert sleep_calls == [5.0]
