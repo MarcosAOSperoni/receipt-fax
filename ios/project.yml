@@ -1,0 +1,41 @@
+name: ReceiptFax
+options:
+  bundleIdPrefix: com.receiptfax
+  deploymentTarget:
+    iOS: "16.0"
+  createIntermediateGroups: true
+targets:
+  ReceiptFax:
+    type: application
+    platform: iOS
+    sources:
+      - ReceiptFax
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.receiptfax.app
+        SWIFT_VERSION: 5.9
+        DEVELOPMENT_TEAM: ""
+        CURRENT_PROJECT_VERSION: 1
+        MARKETING_VERSION: 1.0.0
+    info:
+      path: ReceiptFax/Info.plist
+      properties:
+        CFBundleDisplayName: Receipt Fax
+        CFBundleName: ReceiptFax
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        NSPhotoLibraryUsageDescription: Choose photos to print on your receipt printer.
+        NSCameraUsageDescription: Take photos to print on your receipt printer.
+        UILaunchScreen:
+          UIColorName: ""
+  ReceiptFaxTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - ReceiptFaxTests
+    dependencies:
+      - target: ReceiptFax
+    settings:
+      base:
+        SWIFT_VERSION: 5.9
+        GENERATE_INFOPLIST_FILE: YES

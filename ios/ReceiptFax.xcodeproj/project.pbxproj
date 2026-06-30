@@ -1,0 +1,436 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		29F5AD74EFB1A9F0A8587DC9 /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97C744E15F58E4574715970B /* KeychainStore.swift */; };
+		2A91AFDE4F278B2E05354CC3 /* KeychainStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3600925B28660DF78FB48A6B /* KeychainStoreTests.swift */; };
+		788571CB35E012AEECC5A251 /* MessageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55646081233D23F575A8940C /* MessageStore.swift */; };
+		86A451498B1DD566A3198558 /* ReceiptFaxApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0FBABB2F65DD0270AD35E9 /* ReceiptFaxApp.swift */; };
+		9EF167CADA75392065C8D749 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932125961F3051C39C942B9A /* ContentView.swift */; };
+		FB8727BF493F6AAABC0DC122 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F140C968A99B8D4C3B0833E /* AppState.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		C5BFBD0EC17B8CCE8D11282D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A37453D491071F1425968DBF /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4945AD8017B58967049595AB;
+			remoteInfo = ReceiptFax;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		3600925B28660DF78FB48A6B /* KeychainStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStoreTests.swift; sourceTree = "<group>"; };
+		4A2A960DDECA44A0DD715BE8 /* ReceiptFaxTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ReceiptFaxTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		55646081233D23F575A8940C /* MessageStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageStore.swift; sourceTree = "<group>"; };
+		7F140C968A99B8D4C3B0833E /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		932125961F3051C39C942B9A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		97C744E15F58E4574715970B /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
+		B3B34A59B7C7B1F5CD2C2D8B /* ReceiptFax.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = ReceiptFax.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		EE0FBABB2F65DD0270AD35E9 /* ReceiptFaxApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptFaxApp.swift; sourceTree = "<group>"; };
+		F2147EE02F9754A6DF81237B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		19293FB7D0F69D345EF06CF5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B3B34A59B7C7B1F5CD2C2D8B /* ReceiptFax.app */,
+				4A2A960DDECA44A0DD715BE8 /* ReceiptFaxTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4C381A63E4BF563000C963D0 /* Keychain */ = {
+			isa = PBXGroup;
+			children = (
+				97C744E15F58E4574715970B /* KeychainStore.swift */,
+			);
+			path = Keychain;
+			sourceTree = "<group>";
+		};
+		7673048012DD365D20B0BF86 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				932125961F3051C39C942B9A /* ContentView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		7D52AE30D1856FBC047D20C5 /* Store */ = {
+			isa = PBXGroup;
+			children = (
+				55646081233D23F575A8940C /* MessageStore.swift */,
+			);
+			path = Store;
+			sourceTree = "<group>";
+		};
+		9A8C44617C18951A2AA5CE1B /* ReceiptFax */ = {
+			isa = PBXGroup;
+			children = (
+				7F140C968A99B8D4C3B0833E /* AppState.swift */,
+				F2147EE02F9754A6DF81237B /* Info.plist */,
+				EE0FBABB2F65DD0270AD35E9 /* ReceiptFaxApp.swift */,
+				4C381A63E4BF563000C963D0 /* Keychain */,
+				7D52AE30D1856FBC047D20C5 /* Store */,
+				7673048012DD365D20B0BF86 /* Views */,
+			);
+			path = ReceiptFax;
+			sourceTree = "<group>";
+		};
+		B84CE3BA1AFFB604B553860F /* ReceiptFaxTests */ = {
+			isa = PBXGroup;
+			children = (
+				3600925B28660DF78FB48A6B /* KeychainStoreTests.swift */,
+			);
+			path = ReceiptFaxTests;
+			sourceTree = "<group>";
+		};
+		D1BA45B9DAE28C2B98FC3092 = {
+			isa = PBXGroup;
+			children = (
+				9A8C44617C18951A2AA5CE1B /* ReceiptFax */,
+				B84CE3BA1AFFB604B553860F /* ReceiptFaxTests */,
+				19293FB7D0F69D345EF06CF5 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		07690F57C0E45F182C365D5A /* ReceiptFaxTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8C91A2B6B60C28130AC63442 /* Build configuration list for PBXNativeTarget "ReceiptFaxTests" */;
+			buildPhases = (
+				F8C4316053F517E1E93629F7 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				308516CCE2779EC1D00BFDE9 /* PBXTargetDependency */,
+			);
+			name = ReceiptFaxTests;
+			packageProductDependencies = (
+			);
+			productName = ReceiptFaxTests;
+			productReference = 4A2A960DDECA44A0DD715BE8 /* ReceiptFaxTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		4945AD8017B58967049595AB /* ReceiptFax */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0495BCD216116A4EE4FAD15A /* Build configuration list for PBXNativeTarget "ReceiptFax" */;
+			buildPhases = (
+				C70E952FB699891AEE210F46 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ReceiptFax;
+			packageProductDependencies = (
+			);
+			productName = ReceiptFax;
+			productReference = B3B34A59B7C7B1F5CD2C2D8B /* ReceiptFax.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A37453D491071F1425968DBF /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					4945AD8017B58967049595AB = {
+						DevelopmentTeam = "";
+					};
+				};
+			};
+			buildConfigurationList = AF4611A13C81C14FEDBABB5B /* Build configuration list for PBXProject "ReceiptFax" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = D1BA45B9DAE28C2B98FC3092;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 19293FB7D0F69D345EF06CF5 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4945AD8017B58967049595AB /* ReceiptFax */,
+				07690F57C0E45F182C365D5A /* ReceiptFaxTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		C70E952FB699891AEE210F46 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FB8727BF493F6AAABC0DC122 /* AppState.swift in Sources */,
+				9EF167CADA75392065C8D749 /* ContentView.swift in Sources */,
+				29F5AD74EFB1A9F0A8587DC9 /* KeychainStore.swift in Sources */,
+				788571CB35E012AEECC5A251 /* MessageStore.swift in Sources */,
+				86A451498B1DD566A3198558 /* ReceiptFaxApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F8C4316053F517E1E93629F7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2A91AFDE4F278B2E05354CC3 /* KeychainStoreTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		308516CCE2779EC1D00BFDE9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4945AD8017B58967049595AB /* ReceiptFax */;
+			targetProxy = C5BFBD0EC17B8CCE8D11282D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		1893A71A13C5FC76018AA5F2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		224CBE0BAB14A501DF122BBD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = ReceiptFax/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.receiptfax.app;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		4CBDAE2D7FFF8D970736EA84 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = ReceiptFax/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.receiptfax.app;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		B67E5FE25DCBC6F92ACDCF81 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		E0D16D302E01E6CCCB91016B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.receiptfax.ReceiptFaxTests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ReceiptFax.app/ReceiptFax";
+			};
+			name = Debug;
+		};
+		F19BDBD94A87750D5BBB8217 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.receiptfax.ReceiptFaxTests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ReceiptFax.app/ReceiptFax";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0495BCD216116A4EE4FAD15A /* Build configuration list for PBXNativeTarget "ReceiptFax" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				224CBE0BAB14A501DF122BBD /* Debug */,
+				4CBDAE2D7FFF8D970736EA84 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		8C91A2B6B60C28130AC63442 /* Build configuration list for PBXNativeTarget "ReceiptFaxTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E0D16D302E01E6CCCB91016B /* Debug */,
+				F19BDBD94A87750D5BBB8217 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		AF4611A13C81C14FEDBABB5B /* Build configuration list for PBXProject "ReceiptFax" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B67E5FE25DCBC6F92ACDCF81 /* Debug */,
+				1893A71A13C5FC76018AA5F2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A37453D491071F1425968DBF /* Project object */;
+}
