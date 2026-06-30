@@ -1,0 +1,12 @@
+[server]
+url = https://your-server.example.com
+device_key = sk_your_device_key_here
+
+[printer]
+usb_vendor_id = 0x04b8
+usb_product_id = 0x0e15
+char_width = 42
+print_width_px = 576
+
+[poll]
+interval_seconds = 5
