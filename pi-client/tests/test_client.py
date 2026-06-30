@@ -56,7 +56,7 @@ def test_fetch_pending_returns_messages():
     result = client.fetch_pending(session, "https://example.com")
     assert result == messages
     session.get.assert_called_once_with(
-        "https://example.com/api/v1/device/messages/pending"
+        "https://example.com/api/v1/device/messages/pending", timeout=(10, 30)
     )
 
 
@@ -79,7 +79,7 @@ def test_download_image_returns_bytes():
     result = client.download_image(session, "https://example.com", "2026/06/img.png")
     assert result == b"\x89PNG\r\n"
     session.get.assert_called_once_with(
-        "https://example.com/api/v1/media/2026/06/img.png"
+        "https://example.com/api/v1/media/2026/06/img.png", timeout=(10, 30)
     )
 
 
@@ -94,7 +94,7 @@ def test_ack_message_posts_to_correct_url():
     session = make_session()
     client.ack_message(session, "https://example.com", "msg-123")
     session.post.assert_called_once_with(
-        "https://example.com/api/v1/device/messages/msg-123/ack"
+        "https://example.com/api/v1/device/messages/msg-123/ack", timeout=(10, 30)
     )
 
 
@@ -104,6 +104,7 @@ def test_fail_message_posts_reason():
     session.post.assert_called_once_with(
         "https://example.com/api/v1/device/messages/msg-123/fail",
         json={"reason": "USB error"},
+        timeout=(10, 30),
     )
 
 

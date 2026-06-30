@@ -21,9 +21,14 @@ def load_config(path: str) -> configparser.ConfigParser:
     return config
 
 
+_TIMEOUT = (10, 30)  # (connect_seconds, read_seconds)
+
+
 def fetch_pending(session: requests.Session, base_url: str) -> list:
     try:
-        r = session.get(f"{base_url}/api/v1/device/messages/pending")
+        r = session.get(
+            f"{base_url}/api/v1/device/messages/pending", timeout=_TIMEOUT
+        )
         r.raise_for_status()
         return r.json()
     except Exception as e:
@@ -32,14 +37,16 @@ def fetch_pending(session: requests.Session, base_url: str) -> list:
 
 
 def download_image(session: requests.Session, base_url: str, image_path: str) -> bytes:
-    r = session.get(f"{base_url}/api/v1/media/{image_path}")
+    r = session.get(f"{base_url}/api/v1/media/{image_path}", timeout=_TIMEOUT)
     r.raise_for_status()
     return r.content
 
 
 def ack_message(session: requests.Session, base_url: str, message_id: str) -> None:
     try:
-        r = session.post(f"{base_url}/api/v1/device/messages/{message_id}/ack")
+        r = session.post(
+            f"{base_url}/api/v1/device/messages/{message_id}/ack", timeout=_TIMEOUT
+        )
         r.raise_for_status()
     except Exception as e:
         log.error("Failed to ack message %s: %s", message_id, e)
@@ -52,6 +59,7 @@ def fail_message(
         r = session.post(
             f"{base_url}/api/v1/device/messages/{message_id}/fail",
             json={"reason": reason},
+            timeout=_TIMEOUT,
         )
         r.raise_for_status()
     except Exception as e:

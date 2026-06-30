@@ -27,3 +27,6 @@ ios/Pods/
 
 # Docker
 .docker/
+
+# Pi client — live config contains device key
+pi-client/config.ini
