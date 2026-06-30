@@ -34,14 +34,18 @@ struct AddDeviceView: View {
                 }
             }
         }
+        .sheet(item: $viewModel.createdDevice) { device in
+            APIKeyModal(device: device, viewModel: viewModel)
+        }
         .onChange(of: viewModel.createdDevice) { device in
-            if device != nil { dismiss() }
+            if device == nil { dismiss() }
         }
     }
 }
 
 struct APIKeyModal: View {
     let device: DeviceCreateResponse
+    @ObservedObject var viewModel: SettingsViewModel
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
@@ -86,9 +90,12 @@ struct APIKeyModal: View {
 
                 Spacer()
 
-                Button("Done — I've saved the key") { dismiss() }
-                    .buttonStyle(.borderedProminent)
-                    .padding(.horizontal)
+                Button("Done — I've saved the key") {
+                    viewModel.createdDevice = nil
+                    dismiss()
+                }
+                .buttonStyle(.borderedProminent)
+                .padding(.horizontal)
             }
             .padding()
             .navigationTitle("New Printer Added")

@@ -70,8 +70,5 @@ struct SettingsView: View {
         .sheet(isPresented: $showAddDevice) {
             AddDeviceView(viewModel: viewModel)
         }
-        .sheet(item: $viewModel.createdDevice) { device in
-            APIKeyModal(device: device)
-        }
     }
 }
