@@ -46,4 +46,8 @@ final class SettingsViewModel: ObservableObject {
             self.error = error.localizedDescription
         }
     }
+
+    func clearCreatedDevice() {
+        createdDevice = nil
+    }
 }

@@ -91,8 +91,7 @@ struct APIKeyModal: View {
                 Spacer()
 
                 Button("Done — I've saved the key") {
-                    viewModel.createdDevice = nil
-                    dismiss()
+                    viewModel.clearCreatedDevice()
                 }
                 .buttonStyle(.borderedProminent)
                 .padding(.horizontal)
