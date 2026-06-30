@@ -54,36 +54,44 @@ final class APIClient {
         body: Data? = nil,
         contentType: String = "application/json"
     ) async throws -> T {
-        let urlRequest = try makeRequest(path: path, method: method, body: body, contentType: contentType)
-        let (data, response) = try await perform(urlRequest)
-        let http = response as? HTTPURLResponse
-
-        if http?.statusCode == 401 {
-            guard let current = refreshToken else { throw APIError.notAuthenticated }
-            do {
-                let tokens = try await performRefresh(refreshToken: current)
-                setTokens(access: tokens.accessToken, refresh: tokens.refreshToken)
-            } catch {
-                NotificationCenter.default.post(name: .authRefreshFailed, object: nil)
-                throw APIError.notAuthenticated
-            }
-            let retry = try makeRequest(path: path, method: method, body: body, contentType: contentType)
-            let (retryData, retryResponse) = try await perform(retry)
-            try checkStatus(retryResponse, data: retryData)
-            return try Self.decoder.decode(T.self, from: retryData)
-        }
-
+        let (data, response) = try await performWithRefresh(
+            path: path, method: method, body: body, contentType: contentType
+        )
         try checkStatus(response, data: data)
         return try Self.decoder.decode(T.self, from: data)
     }
 
     func requestVoid(_ path: String, method: String = "DELETE", body: Data? = nil) async throws {
-        let urlRequest = try makeRequest(path: path, method: method, body: body)
-        let (data, response) = try await perform(urlRequest)
+        let (data, response) = try await performWithRefresh(
+            path: path, method: method, body: body, contentType: "application/json"
+        )
         try checkStatus(response, data: data)
     }
 
     // MARK: - Helpers
+
+    private func performWithRefresh(
+        path: String,
+        method: String,
+        body: Data?,
+        contentType: String
+    ) async throws -> (Data, URLResponse) {
+        let urlRequest = try makeRequest(path: path, method: method, body: body, contentType: contentType)
+        let (data, response) = try await perform(urlRequest)
+        let http = response as? HTTPURLResponse
+
+        guard http?.statusCode == 401 else { return (data, response) }
+        guard let current = refreshToken else { throw APIError.notAuthenticated }
+        do {
+            let tokens = try await performRefresh(refreshToken: current)
+            setTokens(access: tokens.accessToken, refresh: tokens.refreshToken)
+        } catch {
+            NotificationCenter.default.post(name: .authRefreshFailed, object: nil)
+            throw APIError.notAuthenticated
+        }
+        let retry = try makeRequest(path: path, method: method, body: body, contentType: contentType)
+        return try await perform(retry)
+    }
 
     private func makeRequest(
         path: String,
