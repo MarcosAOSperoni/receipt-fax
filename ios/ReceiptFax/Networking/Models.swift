@@ -34,7 +34,7 @@ struct DeviceResponse: Decodable, Identifiable {
     let createdAt: Date
 }
 
-struct DeviceCreateResponse: Decodable, Identifiable {
+struct DeviceCreateResponse: Decodable, Identifiable, Equatable {
     let id: UUID
     let name: String
     let lastSeenAt: Date?

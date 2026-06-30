@@ -13,6 +13,7 @@
 		31BE7ED40C43FB88267BEDBC /* APIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F64003E390A7F8F10F9BB18 /* APIClientTests.swift */; };
 		39ACBED1B5F5A84D83AD82D7 /* HistoryViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01EDF3CB5D912B6C312FFCB /* HistoryViewModelTests.swift */; };
 		442EAADBEFAA38EDF1B3B976 /* HistoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8BD6077CB24F0D00B129F7 /* HistoryViewModel.swift */; };
+		44A6EA660B19B9DD8C5542E3 /* AddDeviceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8BDCC0DD48EB29004328328 /* AddDeviceView.swift */; };
 		61635980CA8018728E3F89B9 /* ComposeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2A623164FBB6EC6ABEF83DE /* ComposeView.swift */; };
 		76A43811CF5F639C4BDBE7C9 /* MultipartBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDC63C6915C1FD3770502B0F /* MultipartBuilder.swift */; };
 		7704756A69F74DCCF3F5A0FE /* URLSessionProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A852209DA1778186EEC7EC91 /* URLSessionProtocol.swift */; };
@@ -20,7 +21,9 @@
 		86A451498B1DD566A3198558 /* ReceiptFaxApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0FBABB2F65DD0270AD35E9 /* ReceiptFaxApp.swift */; };
 		8F220CFC8AF8140A44F83AEE /* MockURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = E464B32AFD500155F41945BC /* MockURLSession.swift */; };
 		9EF167CADA75392065C8D749 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932125961F3051C39C942B9A /* ContentView.swift */; };
+		A3875304ABFFB8E8F8D0B484 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C1FD21DD8A510CA300B95F5 /* SettingsViewModel.swift */; };
 		A70EA7465B19EF7FC551EB8F /* APIClient+Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFFC7A8DA90C5538CA56DFAE /* APIClient+Messages.swift */; };
+		A86FB113BB5E0753DA83B44D /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAC8092B0C8BFDF325B88D8B /* SettingsView.swift */; };
 		AF06551AA17DEA53A33AF6B3 /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CACC9F9F2C33FD63B887409 /* APIError.swift */; };
 		B383F6489462BCA0DB3E58A9 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E7D4FAFE0BA5B70D50D9E30 /* HistoryView.swift */; };
 		B5DC3BBD2F0BBFD74C5A5FA5 /* ReceiptPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = C329CEDA2628DB04B5B3F2F6 /* ReceiptPreview.swift */; };
@@ -59,10 +62,13 @@
 		5E7D4FAFE0BA5B70D50D9E30 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		6B629BCB6E7FCF0BC8DDFB7D /* AuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthView.swift; sourceTree = "<group>"; };
 		7F140C968A99B8D4C3B0833E /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		8C1FD21DD8A510CA300B95F5 /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 		932125961F3051C39C942B9A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		97C744E15F58E4574715970B /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
 		A01EDF3CB5D912B6C312FFCB /* HistoryViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryViewModelTests.swift; sourceTree = "<group>"; };
 		A852209DA1778186EEC7EC91 /* URLSessionProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionProtocol.swift; sourceTree = "<group>"; };
+		A8BDCC0DD48EB29004328328 /* AddDeviceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddDeviceView.swift; sourceTree = "<group>"; };
+		AAC8092B0C8BFDF325B88D8B /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		B3B34A59B7C7B1F5CD2C2D8B /* ReceiptFax.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = ReceiptFax.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C329CEDA2628DB04B5B3F2F6 /* ReceiptPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptPreview.swift; sourceTree = "<group>"; };
 		DBE7E5DD1AEC0C8D4346BE80 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
@@ -78,6 +84,16 @@
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
+		0FA6A12D6F309DEDD715FFD0 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				A8BDCC0DD48EB29004328328 /* AddDeviceView.swift */,
+				AAC8092B0C8BFDF325B88D8B /* SettingsView.swift */,
+				8C1FD21DD8A510CA300B95F5 /* SettingsViewModel.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
 		19293FB7D0F69D345EF06CF5 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -122,6 +138,7 @@
 				3ACE2EA556F7F7068799CF0B /* Compose */,
 				5E7EFDDCE656EEF48F6AA5B5 /* History */,
 				CC4C7FD0D9215CF2EB82AA63 /* Onboarding */,
+				0FA6A12D6F309DEDD715FFD0 /* Settings */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -283,6 +300,7 @@
 				A70EA7465B19EF7FC551EB8F /* APIClient+Messages.swift in Sources */,
 				BA4DC6B72CA7D97D95B491DF /* APIClient.swift in Sources */,
 				AF06551AA17DEA53A33AF6B3 /* APIError.swift in Sources */,
+				44A6EA660B19B9DD8C5542E3 /* AddDeviceView.swift in Sources */,
 				FB8727BF493F6AAABC0DC122 /* AppState.swift in Sources */,
 				2C017E68F73080A3E7306C66 /* AuthView.swift in Sources */,
 				61635980CA8018728E3F89B9 /* ComposeView.swift in Sources */,
@@ -298,6 +316,8 @@
 				DB429D5F116C8C049AA1E419 /* OnboardingView.swift in Sources */,
 				86A451498B1DD566A3198558 /* ReceiptFaxApp.swift in Sources */,
 				B5DC3BBD2F0BBFD74C5A5FA5 /* ReceiptPreview.swift in Sources */,
+				A86FB113BB5E0753DA83B44D /* SettingsView.swift in Sources */,
+				A3875304ABFFB8E8F8D0B484 /* SettingsViewModel.swift in Sources */,
 				7704756A69F74DCCF3F5A0FE /* URLSessionProtocol.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
