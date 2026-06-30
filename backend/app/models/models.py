@@ -32,8 +32,8 @@ class User(Base):
         DateTime(timezone=True), server_default=func.now()
     )
 
-    messages: Mapped[list["Message"]] = relationship(back_populates="sender")
-    devices: Mapped[list["Device"]] = relationship(back_populates="owner")
+    messages: Mapped[list["Message"]] = relationship(back_populates="sender", cascade="all, delete-orphan")
+    devices: Mapped[list["Device"]] = relationship(back_populates="owner", cascade="all, delete-orphan")
 
 
 class Device(Base):
@@ -43,7 +43,7 @@ class Device(Base):
         UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
     )
     owner_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("users.id"), nullable=False
+        UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
     name: Mapped[str] = mapped_column(String, nullable=False)
     api_key_hash: Mapped[str] = mapped_column(String, nullable=False)
@@ -55,7 +55,7 @@ class Device(Base):
     )
 
     owner: Mapped["User"] = relationship(back_populates="devices")
-    messages: Mapped[list["Message"]] = relationship(back_populates="device")
+    messages: Mapped[list["Message"]] = relationship(back_populates="device", cascade="all, delete-orphan")
 
 
 class Message(Base):
@@ -65,10 +65,10 @@ class Message(Base):
         UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
     )
     sender_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("users.id"), nullable=False
+        UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
     device_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("devices.id"), nullable=False
+        UUID(as_uuid=True), ForeignKey("devices.id", ondelete="CASCADE"), nullable=False
     )
     body: Mapped[str | None] = mapped_column(Text, nullable=True)
     style: Mapped[dict] = mapped_column(JSONB, default=dict)

@@ -134,6 +134,53 @@ async def test_full_image_message_flow(client, tmp_path):
 
 
 @pytest.mark.asyncio
+async def test_delete_user_with_data_succeeds(client):
+    """Deleting a user who owns devices and messages must return 204, not 500."""
+    # First registrant becomes admin
+    r = await client.post("/api/v1/auth/register", json={
+        "email": "admin@example.com", "display_name": "Admin", "password": "pw"
+    })
+    assert r.status_code == 201
+    admin_token = r.json()["access_token"]
+
+    r2 = await client.post("/api/v1/auth/register", json={
+        "email": "user@example.com", "display_name": "User", "password": "pw"
+    })
+    assert r2.status_code == 201
+    user_token = r2.json()["access_token"]
+
+    # Look up the second user's ID via the admin users list
+    users_r = await client.get(
+        "/api/v1/admin/users",
+        headers={"Authorization": f"Bearer {admin_token}"},
+    )
+    user_id = next(u["id"] for u in users_r.json() if u["email"] == "user@example.com")
+
+    # Create a device and send a message as the second user
+    dr = await client.post(
+        "/api/v1/devices",
+        json={"name": "Printer"},
+        headers={"Authorization": f"Bearer {user_token}"},
+    )
+    assert dr.status_code == 201
+    device_id = dr.json()["id"]
+
+    mr = await client.post(
+        "/api/v1/messages",
+        data={"device_id": device_id, "body": "hi", "style": "{}"},
+        headers={"Authorization": f"Bearer {user_token}"},
+    )
+    assert mr.status_code == 201
+
+    # Admin deletes the user — cascade must handle dependent rows, not 500
+    r_del = await client.delete(
+        f"/api/v1/admin/users/{user_id}",
+        headers={"Authorization": f"Bearer {admin_token}"},
+    )
+    assert r_del.status_code == 204
+
+
+@pytest.mark.asyncio
 async def test_admin_disables_registration(client):
     """Admin locks down the server after initial setup."""
     admin_r = await client.post("/api/v1/auth/register", json={

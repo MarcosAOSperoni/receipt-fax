@@ -49,12 +49,17 @@ async def send_message(
 
         image_path = str(rel_dir / filename)
 
+    try:
+        style_dict = json.loads(style)
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=422, detail="Invalid JSON in style field")
+
     message = Message(
         id=uuid.uuid4(),
         sender_id=user.id,
         device_id=device_id,
         body=body,
-        style=json.loads(style),
+        style=style_dict,
         image_path=image_path,
         status=MessageStatus.pending,
     )
