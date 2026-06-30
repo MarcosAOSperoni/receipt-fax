@@ -5,7 +5,7 @@ struct ContentView: View {
 
     var body: some View {
         if appState.isAuthenticated {
-            Text("Home (coming in Task 8)")  // replaced in Task 8
+            MainTabView()
         } else {
             OnboardingView()
         }
