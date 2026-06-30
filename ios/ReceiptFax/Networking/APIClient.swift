@@ -5,6 +5,8 @@ final class APIClient {
     private let session: URLSessionProtocol
     private(set) var accessToken: String?
     private(set) var refreshToken: String?
+    var onTokensRefreshed: ((String, String) -> Void)?
+    private var refreshTask: Task<TokenResponse, Error>?
 
     static let decoder: JSONDecoder = {
         let d = JSONDecoder()
@@ -83,8 +85,9 @@ final class APIClient {
         guard http?.statusCode == 401 else { return (data, response) }
         guard let current = refreshToken else { throw APIError.notAuthenticated }
         do {
-            let tokens = try await performRefresh(refreshToken: current)
+            let tokens = try await coalesceRefresh(refreshToken: current)
             setTokens(access: tokens.accessToken, refresh: tokens.refreshToken)
+            onTokensRefreshed?(tokens.accessToken, tokens.refreshToken)
         } catch {
             NotificationCenter.default.post(name: .authRefreshFailed, object: nil)
             throw APIError.notAuthenticated
@@ -127,6 +130,18 @@ final class APIClient {
                 ?? HTTPURLResponse.localizedString(forStatusCode: http.statusCode)
             throw APIError.httpError(http.statusCode, detail)
         }
+    }
+
+    private func coalesceRefresh(refreshToken: String) async throws -> TokenResponse {
+        if let existing = refreshTask {
+            return try await existing.value
+        }
+        let task = Task<TokenResponse, Error> {
+            defer { self.refreshTask = nil }
+            return try await self.performRefresh(refreshToken: refreshToken)
+        }
+        self.refreshTask = task
+        return try await task.value
     }
 
     private func performRefresh(refreshToken: String) async throws -> TokenResponse {

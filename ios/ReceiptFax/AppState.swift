@@ -15,7 +15,9 @@ final class AppState: ObservableObject {
     init() {
         let stored = UserDefaults.standard.string(forKey: "serverURL") ?? ""
         serverURL = stored
-        apiClient = APIClient(baseURL: URL(string: stored.isEmpty ? "http://localhost:8000" : stored)!)
+        let baseURL = (!stored.isEmpty ? URL(string: stored) : nil)
+            ?? URL(string: "http://localhost:8000")!
+        apiClient = APIClient(baseURL: baseURL)
 
         if let access = KeychainStore.load("accessToken"),
            let refresh = KeychainStore.load("refreshToken"),
@@ -24,6 +26,11 @@ final class AppState: ObservableObject {
             apiClient.setTokens(access: access, refresh: refresh)
             userEmail = email
             isAuthenticated = true
+        }
+
+        apiClient.onTokensRefreshed = { access, refresh in
+            try? KeychainStore.save(access, for: "accessToken")
+            try? KeychainStore.save(refresh, for: "refreshToken")
         }
 
         NotificationCenter.default.addObserver(
@@ -36,12 +43,17 @@ final class AppState: ObservableObject {
     }
 
     func configure(serverURL: String) {
+        guard let url = URL(string: serverURL) else { return }
         self.serverURL = serverURL
         UserDefaults.standard.set(serverURL, forKey: "serverURL")
-        let newClient = APIClient(baseURL: URL(string: serverURL)!)
+        let newClient = APIClient(baseURL: url)
         if let access = KeychainStore.load("accessToken"),
            let refresh = KeychainStore.load("refreshToken") {
             newClient.setTokens(access: access, refresh: refresh)
+        }
+        newClient.onTokensRefreshed = { access, refresh in
+            try? KeychainStore.save(access, for: "accessToken")
+            try? KeychainStore.save(refresh, for: "refreshToken")
         }
         apiClient = newClient
     }
