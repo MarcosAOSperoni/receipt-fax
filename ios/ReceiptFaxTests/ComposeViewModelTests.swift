@@ -58,6 +58,19 @@ final class ComposeViewModelTests: XCTestCase {
         XCTAssertEqual(sut.style.align, "left")
     }
 
+    func testCheckDevicesReturnsFalseAndSetsErrorWhenEmpty() {
+        let result = sut.checkDevices([])
+        XCTAssertFalse(result)
+        XCTAssertEqual(sut.error, "Add a device in Settings first.")
+    }
+
+    func testCheckDevicesReturnsTrueWhenDevicesAvailable() {
+        let device = DeviceResponse(id: UUID(), name: "Printer 1", lastSeenAt: Date(), createdAt: Date())
+        let result = sut.checkDevices([device])
+        XCTAssertTrue(result)
+        XCTAssertNil(sut.error)
+    }
+
     func testPreviewLinesWrapsAt42Chars() {
         sut.body = String(repeating: "A", count: 50)
         XCTAssertEqual(sut.previewLines[0], String(repeating: "A", count: 42))

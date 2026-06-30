@@ -113,10 +113,7 @@ struct ComposeView: View {
     }
 
     private func handleSend() {
-        guard !devices.isEmpty else {
-            viewModel.error = "Add a device in Settings first."
-            return
-        }
+        guard viewModel.checkDevices(devices) else { return }
         if devices.count == 1, let id = devices.first?.id {
             Task { await viewModel.send(deviceId: id, apiClient: appState.apiClient, store: messageStore) }
         } else {

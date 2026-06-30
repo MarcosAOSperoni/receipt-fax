@@ -30,6 +30,14 @@ final class ComposeViewModel: ObservableObject {
     func setSize(_ size: String) { style.size = size }
     func setAlign(_ align: String) { style.align = align }
 
+    func checkDevices(_ devices: [DeviceResponse]) -> Bool {
+        guard !devices.isEmpty else {
+            error = "Add a device in Settings first."
+            return false
+        }
+        return true
+    }
+
     func send(deviceId: UUID, apiClient: APIClient, store: MessageStore) async {
         guard canSend, !isSending else { return }
         isSending = true
