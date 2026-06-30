@@ -5,14 +5,6 @@ extension Notification.Name {
     static let authRefreshFailed = Notification.Name("ReceiptFax.authRefreshFailed")
 }
 
-// Stub replaced in Task 2
-class APIClient {
-    let baseURL: URL
-    init(baseURL: URL) { self.baseURL = baseURL }
-    func setTokens(access: String, refresh: String) {}
-    func clearTokens() {}
-}
-
 @MainActor
 final class AppState: ObservableObject {
     @Published private(set) var isAuthenticated = false

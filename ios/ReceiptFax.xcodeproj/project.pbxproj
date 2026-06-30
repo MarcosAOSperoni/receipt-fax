@@ -9,9 +9,16 @@
 /* Begin PBXBuildFile section */
 		29F5AD74EFB1A9F0A8587DC9 /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97C744E15F58E4574715970B /* KeychainStore.swift */; };
 		2A91AFDE4F278B2E05354CC3 /* KeychainStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3600925B28660DF78FB48A6B /* KeychainStoreTests.swift */; };
+		31BE7ED40C43FB88267BEDBC /* APIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F64003E390A7F8F10F9BB18 /* APIClientTests.swift */; };
+		76A43811CF5F639C4BDBE7C9 /* MultipartBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDC63C6915C1FD3770502B0F /* MultipartBuilder.swift */; };
+		7704756A69F74DCCF3F5A0FE /* URLSessionProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A852209DA1778186EEC7EC91 /* URLSessionProtocol.swift */; };
 		788571CB35E012AEECC5A251 /* MessageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55646081233D23F575A8940C /* MessageStore.swift */; };
 		86A451498B1DD566A3198558 /* ReceiptFaxApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0FBABB2F65DD0270AD35E9 /* ReceiptFaxApp.swift */; };
+		8F220CFC8AF8140A44F83AEE /* MockURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = E464B32AFD500155F41945BC /* MockURLSession.swift */; };
 		9EF167CADA75392065C8D749 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932125961F3051C39C942B9A /* ContentView.swift */; };
+		AF06551AA17DEA53A33AF6B3 /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CACC9F9F2C33FD63B887409 /* APIError.swift */; };
+		BA4DC6B72CA7D97D95B491DF /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDF1A85117A395B340C86BE5 /* APIClient.swift */; };
+		F444B2640D6D4066253226EC /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBE7E5DD1AEC0C8D4346BE80 /* Models.swift */; };
 		FB8727BF493F6AAABC0DC122 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F140C968A99B8D4C3B0833E /* AppState.swift */; };
 /* End PBXBuildFile section */
 
@@ -26,15 +33,22 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2CACC9F9F2C33FD63B887409 /* APIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
 		3600925B28660DF78FB48A6B /* KeychainStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStoreTests.swift; sourceTree = "<group>"; };
+		3F64003E390A7F8F10F9BB18 /* APIClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClientTests.swift; sourceTree = "<group>"; };
 		4A2A960DDECA44A0DD715BE8 /* ReceiptFaxTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ReceiptFaxTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		55646081233D23F575A8940C /* MessageStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageStore.swift; sourceTree = "<group>"; };
 		7F140C968A99B8D4C3B0833E /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		932125961F3051C39C942B9A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		97C744E15F58E4574715970B /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
+		A852209DA1778186EEC7EC91 /* URLSessionProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionProtocol.swift; sourceTree = "<group>"; };
 		B3B34A59B7C7B1F5CD2C2D8B /* ReceiptFax.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = ReceiptFax.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DBE7E5DD1AEC0C8D4346BE80 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		DDF1A85117A395B340C86BE5 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
+		E464B32AFD500155F41945BC /* MockURLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockURLSession.swift; sourceTree = "<group>"; };
 		EE0FBABB2F65DD0270AD35E9 /* ReceiptFaxApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptFaxApp.swift; sourceTree = "<group>"; };
 		F2147EE02F9754A6DF81237B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		FDC63C6915C1FD3770502B0F /* MultipartBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipartBuilder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -71,6 +85,14 @@
 			path = Store;
 			sourceTree = "<group>";
 		};
+		9A3FEA33F0C905A0530E1DCA /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				E464B32AFD500155F41945BC /* MockURLSession.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
 		9A8C44617C18951A2AA5CE1B /* ReceiptFax */ = {
 			isa = PBXGroup;
 			children = (
@@ -78,6 +100,7 @@
 				F2147EE02F9754A6DF81237B /* Info.plist */,
 				EE0FBABB2F65DD0270AD35E9 /* ReceiptFaxApp.swift */,
 				4C381A63E4BF563000C963D0 /* Keychain */,
+				D31E5DFFB628B09EC8B0966C /* Networking */,
 				7D52AE30D1856FBC047D20C5 /* Store */,
 				7673048012DD365D20B0BF86 /* Views */,
 			);
@@ -87,7 +110,9 @@
 		B84CE3BA1AFFB604B553860F /* ReceiptFaxTests */ = {
 			isa = PBXGroup;
 			children = (
+				3F64003E390A7F8F10F9BB18 /* APIClientTests.swift */,
 				3600925B28660DF78FB48A6B /* KeychainStoreTests.swift */,
+				9A3FEA33F0C905A0530E1DCA /* Helpers */,
 			);
 			path = ReceiptFaxTests;
 			sourceTree = "<group>";
@@ -99,6 +124,18 @@
 				B84CE3BA1AFFB604B553860F /* ReceiptFaxTests */,
 				19293FB7D0F69D345EF06CF5 /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		D31E5DFFB628B09EC8B0966C /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				DDF1A85117A395B340C86BE5 /* APIClient.swift */,
+				2CACC9F9F2C33FD63B887409 /* APIError.swift */,
+				DBE7E5DD1AEC0C8D4346BE80 /* Models.swift */,
+				FDC63C6915C1FD3770502B0F /* MultipartBuilder.swift */,
+				A852209DA1778186EEC7EC91 /* URLSessionProtocol.swift */,
+			);
+			path = Networking;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -178,11 +215,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BA4DC6B72CA7D97D95B491DF /* APIClient.swift in Sources */,
+				AF06551AA17DEA53A33AF6B3 /* APIError.swift in Sources */,
 				FB8727BF493F6AAABC0DC122 /* AppState.swift in Sources */,
 				9EF167CADA75392065C8D749 /* ContentView.swift in Sources */,
 				29F5AD74EFB1A9F0A8587DC9 /* KeychainStore.swift in Sources */,
 				788571CB35E012AEECC5A251 /* MessageStore.swift in Sources */,
+				F444B2640D6D4066253226EC /* Models.swift in Sources */,
+				76A43811CF5F639C4BDBE7C9 /* MultipartBuilder.swift in Sources */,
 				86A451498B1DD566A3198558 /* ReceiptFaxApp.swift in Sources */,
+				7704756A69F74DCCF3F5A0FE /* URLSessionProtocol.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -190,7 +232,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				31BE7ED40C43FB88267BEDBC /* APIClientTests.swift in Sources */,
 				2A91AFDE4F278B2E05354CC3 /* KeychainStoreTests.swift in Sources */,
+				8F220CFC8AF8140A44F83AEE /* MockURLSession.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
