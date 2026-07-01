@@ -87,7 +87,10 @@ def process_message(
             vendor = int(printer_config["usb_vendor_id"], 16)
             product = int(printer_config["usb_product_id"], 16)
             p = open_printer(vendor_id=vendor, product_id=product)
-        print_message(msg, image, p)
+        try:
+            print_message(msg, image, p)
+        finally:
+            p.close()
         ack_message(session, base_url, message_id)
     except Exception as e:
         log.error("Failed to process message %s: %s", message_id, e)
