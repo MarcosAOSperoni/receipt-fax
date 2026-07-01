@@ -20,6 +20,11 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>Take photos to print on your receipt printer.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
@@ -28,11 +33,6 @@
 	<dict>
 		<key>UIColorName</key>
 		<string></string>
-	</dict>
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
 	</dict>
 </dict>
 </plist>

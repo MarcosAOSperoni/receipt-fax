@@ -26,6 +26,8 @@ targets:
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         NSPhotoLibraryUsageDescription: Choose photos to print on your receipt printer.
         NSCameraUsageDescription: Take photos to print on your receipt printer.
+        NSAppTransportSecurity:
+          NSAllowsArbitraryLoads: true
         UILaunchScreen:
           UIColorName: ""
   ReceiptFaxTests:
