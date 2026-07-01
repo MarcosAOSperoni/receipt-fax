@@ -80,9 +80,13 @@ def process_message(
             image_bytes = download_image(session, base_url, msg["image_path"])
             image = process_image(image_bytes, width_px)
 
-        vendor = int(printer_config["usb_vendor_id"], 16)
-        product = int(printer_config["usb_product_id"], 16)
-        p = open_printer(vendor, product)
+        device = printer_config.get("device")
+        if device:
+            p = open_printer(device=device)
+        else:
+            vendor = int(printer_config["usb_vendor_id"], 16)
+            product = int(printer_config["usb_product_id"], 16)
+            p = open_printer(vendor_id=vendor, product_id=product)
         print_message(msg, image, p)
         ack_message(session, base_url, message_id)
     except Exception as e:

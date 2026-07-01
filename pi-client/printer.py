@@ -36,6 +36,9 @@ def print_message(msg: dict, image, printer) -> None:
     printer.cut()
 
 
-def open_printer(vendor_id: int, product_id: int):
+def open_printer(vendor_id: int = None, product_id: int = None, device: str = None):
+    if device:
+        from escpos.printer import File
+        return File(device)
     from escpos.printer import Usb
     return Usb(vendor_id, product_id)
