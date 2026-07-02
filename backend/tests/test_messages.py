@@ -1,4 +1,5 @@
 import io
+import json
 import pytest
 
 
@@ -239,3 +240,59 @@ async def test_invalid_device_key_rejected(client):
         headers={"x-device-key": "sk_bogus"},
     )
     assert r.status_code == 401
+
+
+@pytest.mark.asyncio
+async def test_send_message_with_rich_body(client):
+    token, device_id, _ = await setup_user_and_device(client)
+    rich = json.dumps([{
+        "size": "normal", "align": "left",
+        "spans": [{"text": "Hello ", "bold": False}, {"text": "world", "bold": True}]
+    }])
+    r = await client.post(
+        "/api/v1/messages",
+        data={"device_id": device_id, "body": "Hello world", "style": "{}", "rich_body": rich},
+        headers={"Authorization": f"Bearer {token}"},
+    )
+    assert r.status_code == 201
+    data = r.json()
+    assert data["rich_body"] is not None
+    assert data["rich_body"][0]["spans"][1]["bold"] is True
+    assert data["rich_body"][0]["spans"][1]["text"] == "world"
+
+
+@pytest.mark.asyncio
+async def test_send_message_with_invalid_rich_body_returns_422(client):
+    token, device_id, _ = await setup_user_and_device(client)
+    r = await client.post(
+        "/api/v1/messages",
+        data={"device_id": device_id, "body": "Hi", "style": "{}", "rich_body": "not-json"},
+        headers={"Authorization": f"Bearer {token}"},
+    )
+    assert r.status_code == 422
+
+
+@pytest.mark.asyncio
+async def test_legacy_message_has_null_rich_body(client):
+    token, device_id, _ = await setup_user_and_device(client)
+    r = await client.post(
+        "/api/v1/messages",
+        data={"device_id": device_id, "body": "Legacy", "style": "{}"},
+        headers={"Authorization": f"Bearer {token}"},
+    )
+    assert r.status_code == 201
+    assert r.json()["rich_body"] is None
+
+
+@pytest.mark.asyncio
+async def test_rich_body_returned_in_list(client):
+    token, device_id, _ = await setup_user_and_device(client)
+    rich = json.dumps([{"size": "header", "align": "center", "spans": [{"text": "Hi", "bold": False}]}])
+    await client.post(
+        "/api/v1/messages",
+        data={"device_id": device_id, "body": "Hi", "style": "{}", "rich_body": rich},
+        headers={"Authorization": f"Bearer {token}"},
+    )
+    r = await client.get("/api/v1/messages", headers={"Authorization": f"Bearer {token}"})
+    assert r.status_code == 200
+    assert r.json()[0]["rich_body"][0]["size"] == "header"

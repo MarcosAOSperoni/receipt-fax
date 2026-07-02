@@ -12,7 +12,7 @@ from app.core.config import settings
 from app.core.database import get_db
 from app.dependencies import get_current_user, get_device
 from app.models.models import Device, Message, MessageStatus, User
-from app.schemas.messages import FailRequest, MessageResponse
+from app.schemas.messages import FailRequest, MessageResponse, RichLine
 
 router = APIRouter(tags=["messages"])
 
@@ -22,6 +22,7 @@ async def send_message(
     device_id: uuid.UUID = Form(...),
     body: str | None = Form(None),
     style: str = Form("{}"),
+    rich_body: str | None = Form(None),
     image: UploadFile | None = File(None),
     db: AsyncSession = Depends(get_db),
     user: User = Depends(get_current_user),
@@ -54,12 +55,22 @@ async def send_message(
     except json.JSONDecodeError:
         raise HTTPException(status_code=422, detail="Invalid JSON in style field")
 
+    rich_body_data = None
+    if rich_body:
+        try:
+            parsed = json.loads(rich_body)
+            [RichLine(**line) for line in parsed]  # validate structure
+            rich_body_data = parsed
+        except Exception:
+            raise HTTPException(status_code=422, detail="Invalid JSON in rich_body field")
+
     message = Message(
         id=uuid.uuid4(),
         sender_id=user.id,
         device_id=device_id,
         body=body,
         style=style_dict,
+        rich_body=rich_body_data,
         image_path=image_path,
         status=MessageStatus.pending,
     )
