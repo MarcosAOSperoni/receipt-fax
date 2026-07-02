@@ -12,11 +12,20 @@ def process_image(image_bytes: bytes, width_px: int) -> Image.Image:
     new_height = int(img.height * width_px / img.width)
     img = img.resize((width_px, new_height), Image.LANCZOS)
     img = img.convert("L")
-    img = img.convert("1")  # PIL uses Floyd-Steinberg dither by default
+    img = img.convert("1")
     return img
 
 
 def print_message(msg: dict, image, printer) -> None:
+    rich_body = msg.get("rich_body")
+    if rich_body:
+        _print_rich(rich_body, image, printer)
+    else:
+        _print_legacy(msg, image, printer)
+    printer.text("\n\n\n\n")
+
+
+def _print_legacy(msg: dict, image, printer) -> None:
     style = msg.get("style") or {}
     size = style.get("size", "normal")
 
@@ -33,7 +42,23 @@ def print_message(msg: dict, image, printer) -> None:
     if msg.get("body"):
         printer.text(msg["body"] + "\n")
 
-    printer.text("\n\n\n\n")
+
+def _print_rich(lines: list, image, printer) -> None:
+    if image is not None:
+        printer.set(align="left")
+        printer.image(image)
+    for line in lines:
+        printer.set(
+            align=line["align"],
+            double_height=line["size"] in ("large", "header"),
+            double_width=line["size"] == "header",
+            bold=False,
+        )
+        for span in line["spans"]:
+            printer.set(bold=span["bold"])
+            if span["text"]:
+                printer.text(span["text"])
+        printer.text("\n")
 
 
 def open_printer(vendor_id: int = None, product_id: int = None, device: str = None):
