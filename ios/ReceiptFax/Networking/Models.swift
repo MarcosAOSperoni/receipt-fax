@@ -13,6 +13,19 @@ struct MessageStyle: Codable, Equatable {
     var align: String = "left"    // "left" | "center"
 }
 
+// MARK: - Rich Text
+
+struct RichSpan: Codable, Equatable {
+    var text: String
+    var bold: Bool
+}
+
+struct RichLine: Codable, Equatable {
+    var size: String   // "normal" | "large" | "header"
+    var align: String  // "left" | "center"
+    var spans: [RichSpan]
+}
+
 // MARK: - Messages
 struct MessageResponse: Decodable, Identifiable {
     let id: UUID
@@ -20,6 +33,7 @@ struct MessageResponse: Decodable, Identifiable {
     let body: String?
     let style: MessageStyle
     let imagePath: String?
+    let richBody: [RichLine]?
     let status: String            // "pending" | "printed" | "failed"
     let failureReason: String?
     let createdAt: Date
