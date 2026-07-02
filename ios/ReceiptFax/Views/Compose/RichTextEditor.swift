@@ -139,6 +139,7 @@ struct RichTextEditor: UIViewRepresentable {
 
     func updateUIView(_ tv: UITextView, context: Context) {
         guard !context.coordinator.isUpdatingFromTextView else { return }
+        guard tv.markedTextRange == nil else { return }  // Don't interrupt IME composition
         let sel = tv.selectedRange
         let newAttr = richLinesToAttrString(richLines)
         tv.attributedText = newAttr

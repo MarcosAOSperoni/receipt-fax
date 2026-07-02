@@ -1,5 +1,6 @@
 import uuid
 from datetime import datetime
+from typing import Literal
 
 from pydantic import BaseModel
 
@@ -12,8 +13,8 @@ class RichSpan(BaseModel):
 
 
 class RichLine(BaseModel):
-    size: str   # "normal" | "large" | "header"
-    align: str  # "left" | "center"
+    size: Literal["normal", "large", "header"]
+    align: Literal["left", "center"]
     spans: list[RichSpan]
 
 
