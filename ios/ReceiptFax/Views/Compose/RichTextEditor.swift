@@ -141,13 +141,10 @@ struct RichTextEditor: UIViewRepresentable {
         guard !context.coordinator.isUpdatingFromTextView else { return }
         let sel = tv.selectedRange
         let newAttr = richLinesToAttrString(richLines)
-        // Only rewrite if content differs (avoids cursor jump on every keystroke)
-        if !tv.attributedText.isEqual(to: newAttr) {
-            tv.attributedText = newAttr
-            let loc = min(sel.location, newAttr.length)
-            let len = min(sel.length, newAttr.length - loc)
-            tv.selectedRange = NSRange(location: loc, length: len)
-        }
+        tv.attributedText = newAttr
+        let loc = min(sel.location, newAttr.length)
+        let len = min(sel.length, newAttr.length - loc)
+        tv.selectedRange = NSRange(location: loc, length: len)
         if context.coordinator.lastBoldTrigger != boldTrigger {
             context.coordinator.lastBoldTrigger = boldTrigger
             context.coordinator.toggleBoldOnSelection(in: tv)
