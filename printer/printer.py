@@ -33,7 +33,7 @@ def print_message(msg: dict, image, printer) -> None:
     if msg.get("body"):
         printer.text(msg["body"] + "\n")
 
-    printer.text("\n\n")
+    printer.text("\n\n\n\n")
 
 
 def open_printer(vendor_id: int = None, product_id: int = None, device: str = None):
