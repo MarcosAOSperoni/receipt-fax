@@ -142,7 +142,7 @@ struct RichTextEditor: UIViewRepresentable {
         let sel = tv.selectedRange
         let newAttr = richLinesToAttrString(richLines)
         // Only rewrite if content differs (avoids cursor jump on every keystroke)
-        if tv.attributedText.string != newAttr.string {
+        if !tv.attributedText.isEqual(to: newAttr) {
             tv.attributedText = newAttr
             let loc = min(sel.location, newAttr.length)
             let len = min(sel.length, newAttr.length - loc)
