@@ -76,10 +76,20 @@ struct HistoryView: View {
 struct MessageRow: View {
     let message: MessageResponse
 
+    private var displayLines: [RichLine] {
+        if let rich = message.richBody { return rich }
+        let text = message.body ?? (message.imagePath != nil ? "Image" : "")
+        return [RichLine(
+            size: message.style.size,
+            align: message.style.align,
+            spans: [RichSpan(text: text, bold: message.style.bold)]
+        )]
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            HStack {
-                Text(message.body ?? (message.imagePath != nil ? "📷 Image" : ""))
+            HStack(alignment: .top) {
+                RichMessageView(richLines: displayLines, compact: true)
                     .lineLimit(2)
                 Spacer()
                 StatusBadge(status: message.status)

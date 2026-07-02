@@ -72,7 +72,8 @@ final class HistoryViewModelTests: XCTestCase {
         [{"id":"\(UUID())","device_id":"\(deviceId)","body":"\(body)",
           "style":{"bold":false,"size":"normal","align":"left"},
           "image_path":null,"status":"\(status)","failure_reason":null,
-          "created_at":"2026-06-30T12:00:00.000000Z","printed_at":null}]
+          "created_at":"2026-06-30T12:00:00.000000Z","printed_at":null,
+          "rich_body":null}]
         """.data(using: .utf8)!
     }
 
@@ -82,7 +83,8 @@ final class HistoryViewModelTests: XCTestCase {
         {"id":"\(UUID())","device_id":"\(deviceId)","body":"\(body)",
          "style":{"bold":false,"size":"normal","align":"left"},
          "image_path":null,"status":"\(status)","failure_reason":null,
-         "created_at":"2026-06-30T12:00:00.000000Z","printed_at":null}
+         "created_at":"2026-06-30T12:00:00.000000Z","printed_at":null,
+         "rich_body":null}
         """.data(using: .utf8)!
     }
 
