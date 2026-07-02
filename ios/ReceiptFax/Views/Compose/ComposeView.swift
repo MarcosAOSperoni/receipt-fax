@@ -51,8 +51,7 @@ struct ComposeView: View {
                         }
 
                         ReceiptPreview(
-                            lines: viewModel.plainBody.components(separatedBy: "\n"),
-                            style: MessageStyle(),
+                            richLines: viewModel.richLines,
                             selectedImage: viewModel.selectedImage
                         )
                     }
