@@ -1,17 +1,22 @@
 import SwiftUI
 
 struct FormattingToolbar: View {
-    @Binding var style: MessageStyle
+    let isBoldActive: Bool
+    let currentSize: String
+    let currentAlign: String
+    let onToggleBold: () -> Void
+    let onSetSize: (String) -> Void
+    let onSetAlign: (String) -> Void
 
     var body: some View {
         HStack(spacing: 12) {
-            ToggleButton(label: "B", font: .body.bold(), isOn: style.bold) {
-                style.bold.toggle()
+            ToggleButton(label: "B", font: .body.bold(), isOn: isBoldActive) {
+                onToggleBold()
             }
 
             Divider().frame(height: 28)
 
-            Picker("Size", selection: $style.size) {
+            Picker("Size", selection: Binding(get: { currentSize }, set: { onSetSize($0) })) {
                 Text("Normal").tag("normal")
                 Text("Large").tag("large")
                 Text("Header").tag("header")
@@ -21,11 +26,11 @@ struct FormattingToolbar: View {
 
             Divider().frame(height: 28)
 
-            ToggleButton(systemImage: "text.alignleft", isOn: style.align == "left") {
-                style.align = "left"
+            ToggleButton(systemImage: "text.alignleft", isOn: currentAlign == "left") {
+                onSetAlign("left")
             }
-            ToggleButton(systemImage: "text.aligncenter", isOn: style.align == "center") {
-                style.align = "center"
+            ToggleButton(systemImage: "text.aligncenter", isOn: currentAlign == "center") {
+                onSetAlign("center")
             }
         }
     }

@@ -1,4 +1,5 @@
 import XCTest
+import UIKit
 @testable import ReceiptFax
 
 @MainActor
@@ -10,17 +11,20 @@ final class ComposeViewModelTests: XCTestCase {
     }
 
     func testInitialState() {
-        XCTAssertEqual(sut.body, "")
-        XCTAssertFalse(sut.style.bold)
-        XCTAssertEqual(sut.style.size, "normal")
-        XCTAssertEqual(sut.style.align, "left")
+        XCTAssertEqual(sut.richLines.count, 1)
+        XCTAssertEqual(sut.richLines[0].size, "normal")
+        XCTAssertEqual(sut.richLines[0].align, "left")
+        XCTAssertEqual(sut.richLines[0].spans[0].text, "")
+        XCTAssertFalse(sut.richLines[0].spans[0].bold)
         XCTAssertNil(sut.selectedImage)
         XCTAssertFalse(sut.isSending)
         XCTAssertFalse(sut.canSend)
+        XCTAssertFalse(sut.isBoldActive)
+        XCTAssertEqual(sut.currentLineIndex, 0)
     }
 
-    func testCanSendWithBody() {
-        sut.body = "Hello"
+    func testCanSendWithNonEmptySpan() {
+        sut.richLines = [RichLine(size: "normal", align: "left", spans: [RichSpan(text: "Hello", bold: false)])]
         XCTAssertTrue(sut.canSend)
     }
 
@@ -29,33 +33,54 @@ final class ComposeViewModelTests: XCTestCase {
         XCTAssertTrue(sut.canSend)
     }
 
-    func testWhitespaceBodyCannotSend() {
-        sut.body = "   "
+    func testWhitespaceOnlyCannotSend() {
+        sut.richLines = [RichLine(size: "normal", align: "left", spans: [RichSpan(text: "   ", bold: false)])]
         XCTAssertFalse(sut.canSend)
     }
 
-    func testToggleBold() {
-        XCTAssertFalse(sut.style.bold)
+    func testToggleBoldChangesTrigger() {
+        let initial = sut.boldTrigger
         sut.toggleBold()
-        XCTAssertTrue(sut.style.bold)
-        sut.toggleBold()
-        XCTAssertFalse(sut.style.bold)
+        XCTAssertNotEqual(sut.boldTrigger, initial)
     }
 
-    func testSetSize() {
+    func testSetSizeUpdatesCurrentLine() {
+        sut.currentLineIndex = 0
         sut.setSize("large")
-        XCTAssertEqual(sut.style.size, "large")
+        XCTAssertEqual(sut.richLines[0].size, "large")
         sut.setSize("header")
-        XCTAssertEqual(sut.style.size, "header")
+        XCTAssertEqual(sut.richLines[0].size, "header")
         sut.setSize("normal")
-        XCTAssertEqual(sut.style.size, "normal")
+        XCTAssertEqual(sut.richLines[0].size, "normal")
     }
 
-    func testSetAlign() {
+    func testSetAlignUpdatesCurrentLine() {
+        sut.currentLineIndex = 0
         sut.setAlign("center")
-        XCTAssertEqual(sut.style.align, "center")
+        XCTAssertEqual(sut.richLines[0].align, "center")
         sut.setAlign("left")
-        XCTAssertEqual(sut.style.align, "left")
+        XCTAssertEqual(sut.richLines[0].align, "left")
+    }
+
+    func testSetSizeOutOfBoundsIsNoOp() {
+        sut.currentLineIndex = 99
+        sut.setSize("large")  // must not crash
+    }
+
+    func testPlainBodyJoinsSpans() {
+        sut.richLines = [
+            RichLine(size: "normal", align: "left", spans: [
+                RichSpan(text: "Hello ", bold: false),
+                RichSpan(text: "world", bold: true)
+            ]),
+            RichLine(size: "normal", align: "left", spans: [RichSpan(text: "Line 2", bold: false)])
+        ]
+        XCTAssertEqual(sut.plainBody, "Hello world\nLine 2")
+    }
+
+    func testPlainBodyEmptyWhenOnlyEmptySpans() {
+        // initial state
+        XCTAssertEqual(sut.plainBody, "")
     }
 
     func testCheckDevicesReturnsFalseAndSetsErrorWhenEmpty() {
@@ -71,19 +96,6 @@ final class ComposeViewModelTests: XCTestCase {
         XCTAssertNil(sut.error)
     }
 
-    func testPreviewLinesWrapsAt42Chars() {
-        sut.body = String(repeating: "A", count: 50)
-        XCTAssertEqual(sut.previewLines[0], String(repeating: "A", count: 42))
-        XCTAssertEqual(sut.previewLines[1], String(repeating: "A", count: 8))
-    }
-
-    func testPreviewLinesPreservesNewlines() {
-        sut.body = "Line 1\nLine 2"
-        XCTAssertEqual(sut.previewLines.count, 2)
-        XCTAssertEqual(sut.previewLines[0], "Line 1")
-        XCTAssertEqual(sut.previewLines[1], "Line 2")
-    }
-
     func testSendSuccessClearsComposerAndUpdatesStore() async throws {
         let mock = MockURLSession()
         let apiClient = APIClient(baseURL: URL(string: "https://test")!, session: mock)
@@ -96,10 +108,11 @@ final class ComposeViewModelTests: XCTestCase {
             statusCode: 201
         )]
 
-        sut.body = "Hello"
+        sut.richLines = [RichLine(size: "normal", align: "left", spans: [RichSpan(text: "Hello", bold: false)])]
         await sut.send(deviceId: deviceId, apiClient: apiClient, store: store)
 
-        XCTAssertEqual(sut.body, "")
+        XCTAssertEqual(sut.richLines.count, 1)
+        XCTAssertEqual(sut.richLines[0].spans[0].text, "")
         XCTAssertNil(sut.selectedImage)
         XCTAssertNil(sut.error)
         XCTAssertFalse(sut.isSending)
@@ -114,7 +127,7 @@ final class ComposeViewModelTests: XCTestCase {
         apiClient.setTokens(access: "tok", refresh: "ref")
         let store = MessageStore()
 
-        sut.body = "Hello"
+        sut.richLines = [RichLine(size: "normal", align: "left", spans: [RichSpan(text: "Hello", bold: false)])]
         await sut.send(deviceId: UUID(), apiClient: apiClient, store: store)
 
         XCTAssertNotNil(sut.error)
@@ -129,7 +142,8 @@ final class ComposeViewModelTests: XCTestCase {
         {"id":"\(UUID())","device_id":"\(deviceId)","body":"\(body)",
          "style":{"bold":false,"size":"normal","align":"left"},
          "image_path":null,"status":"pending","failure_reason":null,
-         "created_at":"2026-06-30T12:00:00.000000Z","printed_at":null}
+         "created_at":"2026-06-30T12:00:00.000000Z","printed_at":null,
+         "rich_body":null}
         """.data(using: .utf8)!
     }
 }

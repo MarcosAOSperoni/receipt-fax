@@ -10,29 +10,49 @@ struct ComposeView: View {
     @State private var selectedDeviceId: UUID?
     @State private var showDevicePicker = false
 
+    private var currentLine: RichLine {
+        let lines = viewModel.richLines
+        guard !lines.isEmpty else {
+            return RichLine(size: "normal", align: "left", spans: [RichSpan(text: "", bold: false)])
+        }
+        let idx = min(viewModel.currentLineIndex, lines.count - 1)
+        return lines[max(0, idx)]
+    }
+
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                FormattingToolbar(style: $viewModel.style)
-                    .padding(.horizontal)
-                    .padding(.vertical, 8)
+                FormattingToolbar(
+                    isBoldActive: viewModel.isBoldActive,
+                    currentSize: currentLine.size,
+                    currentAlign: currentLine.align,
+                    onToggleBold: viewModel.toggleBold,
+                    onSetSize: viewModel.setSize,
+                    onSetAlign: viewModel.setAlign
+                )
+                .padding(.horizontal)
+                .padding(.vertical, 8)
 
                 Divider()
 
                 ScrollView {
                     VStack(alignment: .leading, spacing: 12) {
-                        TextEditor(text: $viewModel.body)
-                            .font(.system(.body, design: .monospaced))
-                            .frame(minHeight: 120)
-                            .padding(4)
+                        RichTextEditor(
+                            richLines: $viewModel.richLines,
+                            isBoldActive: $viewModel.isBoldActive,
+                            currentLineIndex: $viewModel.currentLineIndex,
+                            boldTrigger: viewModel.boldTrigger
+                        )
+                        .frame(minHeight: 120)
+                        .padding(4)
 
                         if let image = viewModel.selectedImage {
                             imageAttachmentView(image: image)
                         }
 
                         ReceiptPreview(
-                            lines: viewModel.previewLines,
-                            style: viewModel.style,
+                            lines: viewModel.plainBody.components(separatedBy: "\n"),
+                            style: MessageStyle(),
                             selectedImage: viewModel.selectedImage
                         )
                     }

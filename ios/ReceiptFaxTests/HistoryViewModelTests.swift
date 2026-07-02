@@ -89,7 +89,7 @@ final class HistoryViewModelTests: XCTestCase {
     private func makeMessage(body: String, deviceId: UUID, status: String) -> MessageResponse {
         MessageResponse(
             id: UUID(), deviceId: deviceId, body: body,
-            style: MessageStyle(), imagePath: nil, status: status,
+            style: MessageStyle(), imagePath: nil, richBody: nil, status: status,
             failureReason: "Printer offline", createdAt: Date(), printedAt: nil
         )
     }

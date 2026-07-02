@@ -2,33 +2,36 @@ import UIKit
 
 @MainActor
 final class ComposeViewModel: ObservableObject {
-    @Published var body = ""
-    @Published var style = MessageStyle()
+    @Published var richLines: [RichLine] = [
+        RichLine(size: "normal", align: "left", spans: [RichSpan(text: "", bold: false)])
+    ]
     @Published var selectedImage: UIImage?
     @Published var isSending = false
     @Published var error: String?
+    @Published var isBoldActive = false
+    @Published var currentLineIndex = 0
+    @Published var boldTrigger = UUID()
 
     var canSend: Bool {
-        !body.trimmingCharacters(in: .whitespaces).isEmpty || selectedImage != nil
+        richLines.contains { $0.spans.contains { !$0.text.trimmingCharacters(in: .whitespaces).isEmpty } }
+        || selectedImage != nil
     }
 
-    var previewLines: [String] {
-        body.components(separatedBy: "\n").flatMap { line -> [String] in
-            guard !line.isEmpty else { return [""] }
-            var result: [String] = []
-            var remaining = line
-            while remaining.count > 42 {
-                result.append(String(remaining.prefix(42)))
-                remaining = String(remaining.dropFirst(42))
-            }
-            result.append(remaining)
-            return result
-        }
+    var plainBody: String {
+        richLines.map { $0.spans.map(\.text).joined() }.joined(separator: "\n")
     }
 
-    func toggleBold() { style.bold.toggle() }
-    func setSize(_ size: String) { style.size = size }
-    func setAlign(_ align: String) { style.align = align }
+    func toggleBold() { boldTrigger = UUID() }
+
+    func setSize(_ size: String) {
+        guard currentLineIndex < richLines.count else { return }
+        richLines[currentLineIndex].size = size
+    }
+
+    func setAlign(_ align: String) {
+        guard currentLineIndex < richLines.count else { return }
+        richLines[currentLineIndex].align = align
+    }
 
     func checkDevices(_ devices: [DeviceResponse]) -> Bool {
         guard !devices.isEmpty else {
@@ -44,12 +47,14 @@ final class ComposeViewModel: ObservableObject {
         error = nil
 
         let tempId = UUID()
+        let body = plainBody.isEmpty ? nil : plainBody
         let optimistic = MessageResponse(
             id: tempId,
             deviceId: deviceId,
-            body: body.isEmpty ? nil : body,
-            style: style,
+            body: body,
+            style: MessageStyle(),
             imagePath: nil,
+            richBody: richLines,
             status: "pending",
             failureReason: nil,
             createdAt: Date(),
@@ -60,14 +65,14 @@ final class ComposeViewModel: ObservableObject {
         do {
             let real = try await apiClient.sendMessage(
                 deviceId: deviceId,
-                body: body.isEmpty ? nil : body,
-                style: style,
+                richLines: richLines,
                 image: selectedImage
             )
             store.replace(temporaryId: tempId, with: real)
-            body = ""
+            richLines = [RichLine(size: "normal", align: "left", spans: [RichSpan(text: "", bold: false)])]
             selectedImage = nil
-            style = MessageStyle()
+            isBoldActive = false
+            currentLineIndex = 0
         } catch {
             store.remove(id: tempId)
             self.error = error.localizedDescription

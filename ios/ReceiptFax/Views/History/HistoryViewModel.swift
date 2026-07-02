@@ -26,6 +26,7 @@ final class HistoryViewModel: ObservableObject {
             body: message.body,
             style: message.style,
             imagePath: nil,
+            richBody: message.richBody,
             status: "pending",
             failureReason: nil,
             createdAt: Date(),
@@ -33,10 +34,23 @@ final class HistoryViewModel: ObservableObject {
         )
         store.addOptimistic(optimistic)
         do {
+            // Reconstruct richLines from richBody if available, else fall back to body/style
+            let richLines: [RichLine]
+            if let existing = message.richBody, !existing.isEmpty {
+                richLines = existing
+            } else {
+                let text = message.body ?? ""
+                richLines = text.components(separatedBy: "\n").map {
+                    RichLine(
+                        size: message.style.size,
+                        align: message.style.align,
+                        spans: [RichSpan(text: $0, bold: message.style.bold)]
+                    )
+                }
+            }
             let real = try await apiClient.sendMessage(
                 deviceId: message.deviceId,
-                body: message.body,
-                style: message.style,
+                richLines: richLines,
                 image: nil  // images cannot be resent without re-uploading
             )
             store.replace(temporaryId: tempId, with: real)

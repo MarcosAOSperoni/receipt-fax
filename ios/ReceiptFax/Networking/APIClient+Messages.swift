@@ -7,17 +7,23 @@ extension APIClient {
 
     func sendMessage(
         deviceId: UUID,
-        body: String?,
-        style: MessageStyle,
+        richLines: [RichLine],
         image: UIImage?
     ) async throws -> MessageResponse {
         var form = MultipartBuilder()
         form.addField(name: "device_id", value: deviceId.uuidString)
-        if let body, !body.isEmpty {
-            form.addField(name: "body", value: body)
+
+        let plain = richLines.map { $0.spans.map(\.text).joined() }.joined(separator: "\n")
+        if !plain.isEmpty {
+            form.addField(name: "body", value: plain)
         }
-        let styleJSON = (try? String(data: Self.encoder.encode(style), encoding: .utf8)) ?? "{}"
-        form.addField(name: "style", value: styleJSON)
+        form.addField(name: "style", value: "{\"bold\":false,\"size\":\"normal\",\"align\":\"left\"}")
+
+        if let richBodyData = try? Self.encoder.encode(richLines),
+           let richBodyStr = String(data: richBodyData, encoding: .utf8) {
+            form.addField(name: "rich_body", value: richBodyStr)
+        }
+
         if let image, let jpeg = image.jpegData(compressionQuality: 0.85) {
             form.addFile(name: "image", filename: "photo.jpg", mimeType: "image/jpeg", data: jpeg)
         }
