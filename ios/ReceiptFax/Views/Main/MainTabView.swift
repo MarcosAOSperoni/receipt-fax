@@ -8,10 +8,10 @@ struct MainTabView: View {
     var body: some View {
         TabView {
             ComposeView()
-                .tabItem { Label("Compose", systemImage: "paperplane.fill") }
+                .tabItem { Label("Compose", systemImage: "printer.fill") }
 
             HistoryView()
-                .tabItem { Label("History", systemImage: "clock") }
+                .tabItem { Label("History", systemImage: "clock.fill") }
 
             SettingsView(viewModel: settingsViewModel)
                 .tabItem { Label("Settings", systemImage: "gear") }
