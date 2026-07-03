@@ -16,11 +16,17 @@ struct HistoryView: View {
                 } else {
                     List(messageStore.messages) { message in
                         MessageRow(message: message)
+                            .listRowInsets(EdgeInsets(top: 5, leading: 16, bottom: 5, trailing: 16))
+                            .listRowBackground(Color.clear)
+                            .listRowSeparator(.hidden)
                             .contentShape(Rectangle())
                             .onTapGesture {
                                 if message.status == "failed" { failedMessage = message }
                             }
                     }
+                    .listStyle(.plain)
+                    .scrollContentBackground(.hidden)
+                    .background(Color(.systemGroupedBackground))
                 }
             }
             .navigationTitle("History")
@@ -86,19 +92,36 @@ struct MessageRow: View {
         )]
     }
 
-    var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            HStack(alignment: .top) {
-                RichMessageView(richLines: displayLines, compact: true)
-                    .lineLimit(2)
-                Spacer()
-                StatusBadge(status: message.status)
-            }
-            Text(message.createdAt, style: .relative)
-                .font(.caption)
-                .foregroundStyle(.secondary)
+    private var statusAccentColor: Color {
+        switch message.status {
+        case "printed": return .green
+        case "failed":  return .red
+        default:        return Color(.tertiaryLabel)
         }
-        .padding(.vertical, 2)
+    }
+
+    var body: some View {
+        HStack(spacing: 0) {
+            Rectangle()
+                .fill(statusAccentColor)
+                .frame(width: 4)
+
+            VStack(alignment: .leading, spacing: 5) {
+                HStack(alignment: .top) {
+                    RichMessageView(richLines: displayLines, compact: true, font: message.font ?? "monospace")
+                        .lineLimit(2)
+                    Spacer()
+                    StatusBadge(status: message.status)
+                }
+                Text(message.createdAt, style: .relative)
+                    .font(.caption)
+                    .foregroundStyle(.tertiary)
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 10)
+        }
+        .background(Color(.secondarySystemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 10))
     }
 }
 

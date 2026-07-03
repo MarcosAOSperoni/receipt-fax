@@ -26,25 +26,26 @@ struct ComposeView: View {
                     isBoldActive: viewModel.isBoldActive,
                     currentSize: currentLine.size,
                     currentAlign: currentLine.align,
+                    currentFont: viewModel.font,
                     onToggleBold: viewModel.toggleBold,
                     onSetSize: viewModel.setSize,
-                    onSetAlign: viewModel.setAlign
+                    onSetAlign: viewModel.setAlign,
+                    onSetFont: { viewModel.font = $0 }
                 )
-                .padding(.horizontal)
-                .padding(.vertical, 8)
-
-                Divider()
 
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 12) {
+                    VStack(alignment: .leading, spacing: 16) {
                         RichTextEditor(
                             richLines: $viewModel.richLines,
                             isBoldActive: $viewModel.isBoldActive,
                             currentLineIndex: $viewModel.currentLineIndex,
-                            boldTrigger: viewModel.boldTrigger
+                            boldTrigger: viewModel.boldTrigger,
+                            font: viewModel.font
                         )
                         .frame(minHeight: 120)
-                        .padding(4)
+                        .padding(12)
+                        .background(Color(.secondarySystemBackground))
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
 
                         if let image = viewModel.selectedImage {
                             imageAttachmentView(image: image)
@@ -52,13 +53,12 @@ struct ComposeView: View {
 
                         ReceiptPreview(
                             richLines: viewModel.richLines,
-                            selectedImage: viewModel.selectedImage
+                            selectedImage: viewModel.selectedImage,
+                            font: viewModel.font
                         )
                     }
                     .padding()
                 }
-
-                Divider()
 
                 bottomBar
             }
@@ -108,7 +108,9 @@ struct ComposeView: View {
             .buttonStyle(.borderedProminent)
             .disabled(!viewModel.canSend || viewModel.isSending)
         }
-        .padding()
+        .padding(.horizontal)
+        .padding(.vertical, 12)
+        .background(.bar)
     }
 
     private func imageAttachmentView(image: UIImage) -> some View {

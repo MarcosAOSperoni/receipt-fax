@@ -3,6 +3,7 @@ import SwiftUI
 struct RichMessageView: View {
     let richLines: [RichLine]
     var compact: Bool = false
+    var font: String = "monospace"
 
     var body: some View {
         VStack(alignment: .leading, spacing: compact ? 1 : 2) {
@@ -18,7 +19,7 @@ struct RichMessageView: View {
         let hAlign: HorizontalAlignment = line.align == "center" ? .center : .leading
         let textAlign: TextAlignment = line.align == "center" ? .center : .leading
 
-        (richText(for: line))
+        richText(for: line)
             .multilineTextAlignment(textAlign)
             .frame(maxWidth: .infinity, alignment: hAlign == .center ? .center : .leading)
     }
@@ -30,17 +31,17 @@ struct RichMessageView: View {
     }
 
     private func styledText(_ span: RichSpan, size: String) -> Text {
-        let base: Font
-        if compact {
-            base = .system(.caption, design: .monospaced)
+        let swiftFont: Font
+        if font == "handwriting" {
+            let pointSize: CGFloat = compact ? 12 : (size == "header" ? 22 : size == "large" ? 19 : 16)
+            let name = span.bold ? "SnellRoundhand-Bold" : "SnellRoundhand"
+            swiftFont = Font.custom(name, size: pointSize)
         } else {
-            switch size {
-            case "large":  base = .system(.title3, design: .monospaced)
-            case "header": base = .system(.title2, design: .monospaced)
-            default:       base = .system(.body, design: .monospaced)
-            }
+            let design: Font.Design = font == "serif" ? .serif : font == "sans" ? .default : .monospaced
+            let style: Font.TextStyle = compact ? .caption : (size == "header" ? .title2 : size == "large" ? .title3 : .body)
+            let base = Font.system(style, design: design)
+            swiftFont = span.bold ? base.bold() : base
         }
-        let font = span.bold ? base.bold() : base
-        return Text(span.text).font(font)
+        return Text(span.text).font(swiftFont)
     }
 }
