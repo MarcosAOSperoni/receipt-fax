@@ -137,73 +137,117 @@ def make_rich_msg(lines=None):
     return {"id": "msg-1", "body": "Hello world", "style": {}, "image_path": None, "rich_body": lines}
 
 
-def test_print_rich_sets_line_style():
+# --- Bitmap rendering (_render_lines_as_image) ---
+
+def test_render_lines_returns_1bit_image():
+    lines = [{"size": "normal", "align": "left", "spans": [{"text": "Hello", "bold": False}]}]
+    img = printer._render_lines_as_image(lines, "monospace")
+    assert img.mode == "1"
+
+
+def test_render_lines_width_is_384():
+    lines = [{"size": "normal", "align": "left", "spans": [{"text": "Hello", "bold": False}]}]
+    img = printer._render_lines_as_image(lines, "monospace")
+    assert img.width == 384
+
+
+def test_render_lines_all_font_families_succeed():
+    lines = [{"size": "normal", "align": "left", "spans": [{"text": "Test", "bold": False}]}]
+    for family in ("monospace", "serif", "sans", "handwriting"):
+        img = printer._render_lines_as_image(lines, family)
+        assert isinstance(img, Image.Image), f"Expected Image for family={family}"
+
+
+def test_render_lines_all_sizes_succeed():
+    for size in ("normal", "large", "header"):
+        lines = [{"size": size, "align": "left", "spans": [{"text": "Sz", "bold": False}]}]
+        img = printer._render_lines_as_image(lines, "monospace")
+        assert isinstance(img, Image.Image), f"Expected Image for size={size}"
+
+
+def test_render_lines_center_align_succeeds():
+    lines = [{"size": "normal", "align": "center", "spans": [{"text": "Centered", "bold": False}]}]
+    img = printer._render_lines_as_image(lines, "monospace")
+    assert img.width == 384
+
+
+def test_render_lines_bold_span_succeeds():
+    lines = [{"size": "normal", "align": "left", "spans": [
+        {"text": "Normal ", "bold": False},
+        {"text": "Bold", "bold": True},
+    ]}]
+    img = printer._render_lines_as_image(lines, "monospace")
+    assert isinstance(img, Image.Image)
+
+
+def test_render_lines_multiple_lines_taller_than_one():
+    one_line = [{"size": "normal", "align": "left", "spans": [{"text": "A", "bold": False}]}]
+    two_lines = [
+        {"size": "normal", "align": "left", "spans": [{"text": "A", "bold": False}]},
+        {"size": "normal", "align": "left", "spans": [{"text": "B", "bold": False}]},
+    ]
+    h1 = printer._render_lines_as_image(one_line, "monospace").height
+    h2 = printer._render_lines_as_image(two_lines, "monospace").height
+    assert h2 > h1
+
+
+def test_render_lines_empty_span_text_does_not_crash():
+    lines = [{"size": "normal", "align": "left", "spans": [{"text": "", "bold": False}]}]
+    img = printer._render_lines_as_image(lines, "monospace")
+    assert isinstance(img, Image.Image)
+
+
+# --- print_message with rich_body (bitmap path) ---
+
+def test_print_rich_calls_printer_image():
     p = MagicMock()
     printer.print_message(make_rich_msg(), None, p)
-    p.set.assert_any_call(align="left", double_height=False, double_width=False, bold=False)
+    assert p.image.call_count == 1
+    img_arg = p.image.call_args[0][0]
+    assert isinstance(img_arg, Image.Image)
+    assert img_arg.width == 384
+    assert img_arg.mode == "1"
 
 
-def test_print_rich_sets_bold_per_span():
+def test_print_rich_with_photo_calls_image_twice():
+    p = MagicMock()
+    photo = Image.new("1", (384, 100))
+    printer.print_message(make_rich_msg(), photo, p)
+    assert p.image.call_count == 2
+    # Photo is sent first, text bitmap second
+    assert p.image.call_args_list[0][0][0] is photo
+
+
+def test_print_rich_still_feeds_paper():
     p = MagicMock()
     printer.print_message(make_rich_msg(), None, p)
-    p.set.assert_any_call(bold=False)
-    p.set.assert_any_call(bold=True)
-
-
-def test_print_rich_text_per_span():
-    p = MagicMock()
-    printer.print_message(make_rich_msg(), None, p)
-    p.text.assert_any_call("Hello ")
-    p.text.assert_any_call("world")
-    p.text.assert_any_call("\n")
     p.text.assert_any_call("\n\n\n\n")
 
 
-def test_print_rich_large_line():
+def test_print_rich_does_not_call_set():
+    """Text is now bitmap; no ESC/POS set() calls for rich body."""
     p = MagicMock()
-    lines = [{"size": "large", "align": "center", "spans": [{"text": "Big", "bold": False}]}]
-    printer.print_message(make_rich_msg(lines), None, p)
-    p.set.assert_any_call(align="center", double_height=True, double_width=False, bold=False)
+    printer.print_message(make_rich_msg(), None, p)
+    p.set.assert_not_called()
 
 
-def test_print_rich_header_line():
+def test_print_rich_uses_font_field_from_message():
     p = MagicMock()
-    lines = [{"size": "header", "align": "center", "spans": [{"text": "Head", "bold": False}]}]
-    printer.print_message(make_rich_msg(lines), None, p)
-    p.set.assert_any_call(align="center", double_height=True, double_width=True, bold=False)
+    msg = make_rich_msg()
+    msg["font"] = "serif"
+    printer.print_message(msg, None, p)
+    img_arg = p.image.call_args[0][0]
+    assert isinstance(img_arg, Image.Image)
 
 
-def test_print_rich_with_image():
+def test_print_rich_defaults_to_monospace_when_font_absent():
     p = MagicMock()
-    img = Image.new("1", (200, 100))
-    printer.print_message(make_rich_msg(), img, p)
-    p.image.assert_called_once_with(img)
-
-
-def test_print_rich_skips_empty_spans():
-    p = MagicMock()
-    lines = [{"size": "normal", "align": "left", "spans": [{"text": "", "bold": False}]}]
-    printer.print_message(make_rich_msg(lines), None, p)
-    # text("\n") for line end and text("\n\n\n\n") for feed, but no span text
-    text_calls = [str(c) for c in p.text.call_args_list]
-    assert not any("" == c for c in p.text.call_args_list if c.args == ("",))
-
-
-def test_print_rich_multiple_lines():
-    p = MagicMock()
-    lines = [
-        {"size": "normal", "align": "left", "spans": [{"text": "Line 1", "bold": False}]},
-        {"size": "large", "align": "center", "spans": [{"text": "Line 2", "bold": True}]},
-    ]
-    printer.print_message(make_rich_msg(lines), None, p)
-    p.text.assert_any_call("Line 1")
-    p.text.assert_any_call("Line 2")
-    # Two line-end \n calls
-    newline_calls = [c for c in p.text.call_args_list if c.args == ("\n",)]
-    assert len(newline_calls) == 2
+    printer.print_message(make_rich_msg(), None, p)  # no "font" key
+    p.image.assert_called_once()
 
 
 def test_print_rich_falls_back_to_legacy_when_no_rich_body():
+    """Unchanged: legacy path still uses ESC/POS."""
     p = MagicMock()
     printer.print_message(make_msg("Legacy"), None, p)
     p.set.assert_any_call(bold=False, align="left", double_height=False, double_width=False)
