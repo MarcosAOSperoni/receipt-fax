@@ -8,6 +8,7 @@ extension APIClient {
     func sendMessage(
         deviceId: UUID,
         richLines: [RichLine],
+        font: String,
         image: UIImage?
     ) async throws -> MessageResponse {
         var form = MultipartBuilder()
@@ -18,6 +19,7 @@ extension APIClient {
             form.addField(name: "body", value: plain)
         }
         form.addField(name: "style", value: "{\"bold\":false,\"size\":\"normal\",\"align\":\"left\"}")
+        form.addField(name: "font", value: font)
 
         if let richBodyData = try? Self.encoder.encode(richLines),
            let richBodyStr = String(data: richBodyData, encoding: .utf8) {

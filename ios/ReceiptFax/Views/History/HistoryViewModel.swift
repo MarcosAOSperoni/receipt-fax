@@ -27,6 +27,7 @@ final class HistoryViewModel: ObservableObject {
             style: message.style,
             imagePath: nil,
             richBody: message.richBody,
+            font: message.font,
             status: "pending",
             failureReason: nil,
             createdAt: Date(),
@@ -51,6 +52,7 @@ final class HistoryViewModel: ObservableObject {
             let real = try await apiClient.sendMessage(
                 deviceId: message.deviceId,
                 richLines: richLines,
+                font: message.font ?? "monospace",
                 image: nil  // images cannot be resent without re-uploading
             )
             store.replace(temporaryId: tempId, with: real)

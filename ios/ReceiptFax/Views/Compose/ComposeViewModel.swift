@@ -11,6 +11,7 @@ final class ComposeViewModel: ObservableObject {
     @Published var isBoldActive = false
     @Published var currentLineIndex = 0
     @Published var boldTrigger = UUID()
+    @Published var font: String = "monospace"
 
     var canSend: Bool {
         richLines.contains { $0.spans.contains { !$0.text.trimmingCharacters(in: .whitespaces).isEmpty } }
@@ -55,6 +56,7 @@ final class ComposeViewModel: ObservableObject {
             style: MessageStyle(),
             imagePath: nil,
             richBody: richLines,
+            font: font,
             status: "pending",
             failureReason: nil,
             createdAt: Date(),
@@ -66,6 +68,7 @@ final class ComposeViewModel: ObservableObject {
             let real = try await apiClient.sendMessage(
                 deviceId: deviceId,
                 richLines: richLines,
+                font: font,
                 image: selectedImage
             )
             store.replace(temporaryId: tempId, with: real)
@@ -73,6 +76,7 @@ final class ComposeViewModel: ObservableObject {
             selectedImage = nil
             isBoldActive = false
             currentLineIndex = 0
+            // font intentionally not reset — user likely wants to keep their last font choice
         } catch {
             store.remove(id: tempId)
             self.error = error.localizedDescription

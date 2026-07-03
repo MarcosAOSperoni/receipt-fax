@@ -11,18 +11,35 @@ private func fontSizeFor(_ size: String) -> CGFloat {
     }
 }
 
-func richLinesToAttrString(_ lines: [RichLine]) -> NSMutableAttributedString {
+func uiFontFor(family: String, size: CGFloat, bold: Bool) -> UIFont {
+    let weight: UIFont.Weight = bold ? .bold : .regular
+    switch family {
+    case "serif":
+        if let desc = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body)
+                        .withDesign(.serif) {
+            let d = bold ? (desc.withSymbolicTraits(.traitBold) ?? desc) : desc
+            return UIFont(descriptor: d, size: size)
+        }
+        return UIFont.systemFont(ofSize: size, weight: weight)
+    case "sans":
+        return UIFont.systemFont(ofSize: size, weight: weight)
+    case "handwriting":
+        let name = bold ? "SnellRoundhand-Bold" : "SnellRoundhand"
+        return UIFont(name: name, size: size) ?? UIFont.systemFont(ofSize: size, weight: weight)
+    default:  // "monospace"
+        return UIFont.monospacedSystemFont(ofSize: size, weight: weight)
+    }
+}
+
+func richLinesToAttrString(_ lines: [RichLine], font: String = "monospace") -> NSMutableAttributedString {
     let result = NSMutableAttributedString()
     for (i, line) in lines.enumerated() {
         let para = NSMutableParagraphStyle()
         para.alignment = line.align == "center" ? .center : .natural
         for span in line.spans {
-            let font = UIFont.monospacedSystemFont(
-                ofSize: fontSizeFor(line.size),
-                weight: span.bold ? .bold : .regular
-            )
+            let f = uiFontFor(family: font, size: fontSizeFor(line.size), bold: span.bold)
             let attrs: [NSAttributedString.Key: Any] = [
-                .font: font,
+                .font: f,
                 .paragraphStyle: para,
                 richSizeKey: line.size,
             ]
@@ -32,7 +49,7 @@ func richLinesToAttrString(_ lines: [RichLine]) -> NSMutableAttributedString {
             let newlinePara = NSMutableParagraphStyle()
             newlinePara.alignment = line.align == "center" ? .center : .natural
             let newlineAttrs: [NSAttributedString.Key: Any] = [
-                .font: UIFont.monospacedSystemFont(ofSize: fontSizeFor(line.size), weight: .regular),
+                .font: uiFontFor(family: font, size: fontSizeFor(line.size), bold: false),
                 .paragraphStyle: newlinePara,
                 richSizeKey: line.size,
             ]
@@ -41,7 +58,7 @@ func richLinesToAttrString(_ lines: [RichLine]) -> NSMutableAttributedString {
     }
     if result.length == 0 {
         let defaultAttrs: [NSAttributedString.Key: Any] = [
-            .font: UIFont.monospacedSystemFont(ofSize: 14, weight: .regular),
+            .font: uiFontFor(family: font, size: 14, bold: false),
             .paragraphStyle: NSMutableParagraphStyle(),
             richSizeKey: "normal",
         ]
@@ -81,6 +98,16 @@ func attrStringToRichLines(_ attrStr: NSAttributedString) -> [RichLine] {
                 if let s = val as? String { size = s }
             }
             attrStr.enumerateAttribute(.paragraphStyle, in: firstCharRange, options: []) { val, _, _ in
+                if let ps = val as? NSParagraphStyle, ps.alignment == .center { align = "center" }
+            }
+        } else if lineRange.location > 0 {
+            // Empty line — inherit size/align from the preceding \n separator so pressing
+            // Enter on a sized line carries that size forward into the new empty line.
+            let nlRange = NSRange(location: lineRange.location - 1, length: 1)
+            attrStr.enumerateAttribute(richSizeKey, in: nlRange, options: []) { val, _, _ in
+                if let s = val as? String { size = s }
+            }
+            attrStr.enumerateAttribute(.paragraphStyle, in: nlRange, options: []) { val, _, _ in
                 if let ps = val as? NSParagraphStyle, ps.alignment == .center { align = "center" }
             }
         }
@@ -126,6 +153,7 @@ struct RichTextEditor: UIViewRepresentable {
     @Binding var isBoldActive: Bool
     @Binding var currentLineIndex: Int
     var boldTrigger: UUID
+    var font: String = "monospace"
 
     func makeUIView(context: Context) -> UITextView {
         let tv = UITextView()
@@ -133,15 +161,16 @@ struct RichTextEditor: UIViewRepresentable {
         tv.isEditable = true
         tv.isScrollEnabled = false
         tv.backgroundColor = .clear
-        tv.attributedText = richLinesToAttrString(richLines)
+        tv.attributedText = richLinesToAttrString(richLines, font: font)
         return tv
     }
 
     func updateUIView(_ tv: UITextView, context: Context) {
         guard !context.coordinator.isUpdatingFromTextView else { return }
         guard tv.markedTextRange == nil else { return }  // Don't interrupt IME composition
+        context.coordinator.fontFamily = font
         let sel = tv.selectedRange
-        let newAttr = richLinesToAttrString(richLines)
+        let newAttr = richLinesToAttrString(richLines, font: font)
         tv.attributedText = newAttr
         let loc = min(sel.location, newAttr.length)
         let len = min(sel.length, newAttr.length - loc)
@@ -162,6 +191,7 @@ struct RichTextEditor: UIViewRepresentable {
         @Binding var currentLineIndex: Int
         var isUpdatingFromTextView = false
         var lastBoldTrigger = UUID()
+        var fontFamily: String = "monospace"
 
         init(richLines: Binding<[RichLine]>, isBoldActive: Binding<Bool>, currentLineIndex: Binding<Int>) {
             _richLines = richLines
@@ -184,11 +214,22 @@ struct RichTextEditor: UIViewRepresentable {
 
             let sel = tv.selectedRange
             if sel.length == 0 {
-                if let font = tv.typingAttributes[.font] as? UIFont {
-                    isBoldActive = font.fontDescriptor.symbolicTraits.contains(.traitBold)
-                } else {
-                    isBoldActive = false
-                }
+                // Sync richSizeKey (and matching font size) into typingAttributes so that when
+                // UIKit inserts any character — including the \n from Enter — it carries the
+                // current line's size. Without this, the inserted \n lacks richSizeKey and the
+                // new empty line defaults to "normal" in attrStringToRichLines.
+                let lineSize = richLines.indices.contains(currentLineIndex) ? richLines[currentLineIndex].size : "normal"
+                let lineAlign = richLines.indices.contains(currentLineIndex) ? richLines[currentLineIndex].align : "left"
+                var attrs = tv.typingAttributes
+                let bold = (attrs[.font] as? UIFont)?.fontDescriptor.symbolicTraits.contains(.traitBold) ?? false
+                attrs[richSizeKey] = lineSize
+                attrs[.font] = uiFontFor(family: fontFamily, size: fontSizeFor(lineSize), bold: bold)
+                let para = NSMutableParagraphStyle()
+                para.alignment = lineAlign == "center" ? .center : .natural
+                attrs[.paragraphStyle] = para
+                tv.typingAttributes = attrs
+
+                isBoldActive = bold
             } else {
                 var allBold = sel.length > 0
                 tv.attributedText.enumerateAttribute(.font, in: sel, options: []) { val, _, stop in
@@ -207,8 +248,8 @@ struct RichTextEditor: UIViewRepresentable {
 
             if sel.length == 0 {
                 var attrs = tv.typingAttributes
-                let cur = attrs[.font] as? UIFont ?? UIFont.monospacedSystemFont(ofSize: 14, weight: .regular)
-                attrs[.font] = UIFont.monospacedSystemFont(ofSize: cur.pointSize, weight: newBold ? .bold : .regular)
+                let cur = attrs[.font] as? UIFont ?? uiFontFor(family: fontFamily, size: 14, bold: false)
+                attrs[.font] = uiFontFor(family: fontFamily, size: cur.pointSize, bold: newBold)
                 tv.typingAttributes = attrs
                 isBoldActive = newBold
                 return
@@ -216,8 +257,8 @@ struct RichTextEditor: UIViewRepresentable {
 
             let mutable = NSMutableAttributedString(attributedString: tv.attributedText)
             mutable.enumerateAttribute(.font, in: sel, options: []) { val, range, _ in
-                let cur = val as? UIFont ?? UIFont.monospacedSystemFont(ofSize: 14, weight: .regular)
-                mutable.addAttribute(.font, value: UIFont.monospacedSystemFont(ofSize: cur.pointSize, weight: newBold ? .bold : .regular), range: range)
+                let cur = val as? UIFont ?? uiFontFor(family: fontFamily, size: 14, bold: false)
+                mutable.addAttribute(.font, value: uiFontFor(family: fontFamily, size: cur.pointSize, bold: newBold), range: range)
             }
             isUpdatingFromTextView = true
             tv.attributedText = mutable

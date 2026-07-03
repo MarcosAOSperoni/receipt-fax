@@ -34,6 +34,7 @@ struct MessageResponse: Decodable, Identifiable {
     let style: MessageStyle
     let imagePath: String?
     let richBody: [RichLine]?
+    let font: String?               // nil for old messages → treated as "monospace"
     let status: String            // "pending" | "printed" | "failed"
     let failureReason: String?
     let createdAt: Date
