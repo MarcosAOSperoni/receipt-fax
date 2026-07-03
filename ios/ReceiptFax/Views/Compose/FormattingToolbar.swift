@@ -28,10 +28,30 @@ struct FormattingToolbar: View {
 
                 Divider().frame(height: 22)
 
-                FormatButton(label: "Mn", font: .system(size: 11, weight: .semibold, design: .monospaced), isOn: currentFont == "monospace") { onSetFont("monospace") }
-                FormatButton(label: "Sr", font: .system(size: 11, weight: .semibold, design: .serif), isOn: currentFont == "serif") { onSetFont("serif") }
-                FormatButton(label: "Sa", font: .system(size: 11, weight: .semibold), isOn: currentFont == "sans") { onSetFont("sans") }
-                FormatButton(systemImage: "f.cursive", isOn: currentFont == "handwriting") { onSetFont("handwriting") }
+                Menu {
+                    ForEach([("monospace", "Monospace"), ("serif", "Serif"), ("sans", "Sans-serif"), ("handwriting", "Handwriting")], id: \.0) { value, label in
+                        Button {
+                            onSetFont(value)
+                        } label: {
+                            if currentFont == value {
+                                Label(label, systemImage: "checkmark")
+                            } else {
+                                Text(label)
+                            }
+                        }
+                    }
+                } label: {
+                    HStack(spacing: 4) {
+                        Image(systemName: "textformat")
+                            .font(.system(size: 13, weight: .medium))
+                        Image(systemName: "chevron.down")
+                            .font(.system(size: 9, weight: .medium))
+                    }
+                    .frame(width: 48, height: 36)
+                    .background(Color(.systemGray5))
+                    .foregroundStyle(Color.primary)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                }
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 8)
