@@ -73,6 +73,7 @@ class Message(Base):
     body: Mapped[str | None] = mapped_column(Text, nullable=True)
     style: Mapped[dict] = mapped_column(JSONB, default=dict)
     rich_body: Mapped[list | None] = mapped_column(JSONB, nullable=True, default=None)
+    font: Mapped[str | None] = mapped_column(Text, nullable=True)
     image_path: Mapped[str | None] = mapped_column(String, nullable=True)
     status: Mapped[MessageStatus] = mapped_column(
         Enum(MessageStatus), default=MessageStatus.pending

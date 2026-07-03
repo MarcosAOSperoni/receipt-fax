@@ -14,6 +14,8 @@ from app.dependencies import get_current_user, get_device
 from app.models.models import Device, Message, MessageStatus, User
 from app.schemas.messages import FailRequest, MessageResponse, RichLine
 
+_VALID_FONTS = {"monospace", "serif", "sans", "handwriting"}
+
 router = APIRouter(tags=["messages"])
 
 
@@ -23,6 +25,7 @@ async def send_message(
     body: str | None = Form(None),
     style: str = Form("{}"),
     rich_body: str | None = Form(None),
+    font: str = Form("monospace"),
     image: UploadFile | None = File(None),
     db: AsyncSession = Depends(get_db),
     user: User = Depends(get_current_user),
@@ -30,6 +33,9 @@ async def send_message(
     device = await db.get(Device, device_id)
     if not device or device.owner_id != user.id:
         raise HTTPException(status_code=404, detail="Device not found")
+
+    if font not in _VALID_FONTS:
+        raise HTTPException(status_code=422, detail="Invalid font value")
 
     if not body and not image:
         raise HTTPException(status_code=422, detail="Message must have body or image")
@@ -71,6 +77,7 @@ async def send_message(
         body=body,
         style=style_dict,
         rich_body=rich_body_data,
+        font=font,
         image_path=image_path,
         status=MessageStatus.pending,
     )

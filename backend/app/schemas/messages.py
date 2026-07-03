@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime
 from typing import Literal
 
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 
 from app.models.models import MessageStatus
 
@@ -29,6 +29,12 @@ class MessageResponse(BaseModel):
     created_at: datetime
     printed_at: datetime | None
     rich_body: list[RichLine] | None = None
+    font: str = "monospace"
+
+    @field_validator("font", mode="before")
+    @classmethod
+    def default_font(cls, v: str | None) -> str:
+        return v or "monospace"
 
     model_config = {"from_attributes": True}
 
